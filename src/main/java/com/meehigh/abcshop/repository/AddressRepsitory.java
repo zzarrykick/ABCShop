@@ -1,0 +1,7 @@
+package com.meehigh.abcshop.repository;
+
+import com.meehigh.abcshop.model.Address;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface AddressRepsitory extends JpaRepository<Address, Long> {
+}
