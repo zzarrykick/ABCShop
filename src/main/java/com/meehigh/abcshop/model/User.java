@@ -1,11 +1,9 @@
 package com.meehigh.abcshop.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -23,13 +21,15 @@ public class User {
 
     private String city;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Address> addresses;
 
     private String email;
 
     private String password;
-    
-    private Role role;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Role> roles = new ArrayList<>();
 
     private String messageChannel;
 }

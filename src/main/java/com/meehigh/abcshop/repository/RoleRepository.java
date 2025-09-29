@@ -1,6 +1,7 @@
 package com.meehigh.abcshop.repository;
 
+import com.meehigh.abcshop.model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface Role extends JpaRepository<Role,Long> {
+public interface RoleRepository extends JpaRepository<Role,Long> {
 }

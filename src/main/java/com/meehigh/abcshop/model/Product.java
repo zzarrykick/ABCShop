@@ -17,13 +17,12 @@ public class Product {
 
     private String description;
 
+    @ManyToOne(fetch = FetchType.EAGER)
     private Category category;
 
     private String thumbnailUrl;
 
-    private List<ProductType> productType;
-
     private BigDecimal price;
 
-    private User author;
+    private Integer stock;
 }

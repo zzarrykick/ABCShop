@@ -1,13 +1,12 @@
 package com.meehigh.abcshop.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 @Data
 @Entity
@@ -15,11 +14,23 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
+
     private BigDecimal totalPrice;
+
+/*    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Address deliveryAddress;
-    private Address userAddress;
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Address userAddress;*/
+
     private LocalDateTime orderDate;
-    private List<OrderLine> orderLines;
-    private Enum<Status> status;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Map<Product, Integer> products;
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
 }
