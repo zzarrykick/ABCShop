@@ -3,6 +3,8 @@ package com.meehigh.abcshop.service;
 import com.meehigh.abcshop.model.User;
 import com.meehigh.abcshop.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,21 +28,24 @@ public class UserService {
     }
 
     @Transactional
-    public void addNewUser(User user) {
-        userRepository.save(user);
+    public User addNewUser(User user) {
+       return userRepository.save(user);
     }
 
     @Transactional
-    public void editUser(Long id, User user) {
-        if(userRepository.existsById(id)) {
-            userRepository.save(user);
-        }
+    public ResponseEntity<String> editUser(Long id, User updatedUser) {
+        return userRepository.findById(id).map(user -> {
+            updatedUser.setId(user.getId());
+            userRepository.save(updatedUser);
+            return ResponseEntity.status(HttpStatus.OK).body("User with id: " +id+ " has been updated successfully");
+        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with id: " + id + " not found"));
     }
 
     @Transactional
-    public void deleteUser(Long id) {
-        if(userRepository.existsById(id)) {
-            userRepository.deleteById(id);
-        }
+    public ResponseEntity<String> deleteUser(Long id) {
+        return userRepository.findById(id).map(user ->  {
+            userRepository.deleteById(user.getId());
+            return ResponseEntity.status(HttpStatus.OK).body("User with id: " +id+ " has been deleted");
+        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with id: " +id+ " not found"));
     }
 }

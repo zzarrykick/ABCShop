@@ -19,4 +19,7 @@ public class Address {
     private String street;
 
     private String zipCode;
+
+    @ManyToOne(fetch = FetchType.EAGER,  cascade = CascadeType.ALL)
+    private User userId;
 }

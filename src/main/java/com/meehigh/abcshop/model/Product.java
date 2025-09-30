@@ -1,6 +1,7 @@
 package com.meehigh.abcshop.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -18,6 +19,7 @@ public class Product {
     private String description;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="category_id")
     private Category category;
 
     private String thumbnailUrl;
@@ -25,4 +27,7 @@ public class Product {
     private BigDecimal price;
 
     private Integer stock;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderLine> orderLine;
 }

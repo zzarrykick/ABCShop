@@ -1,8 +1,12 @@
 package com.meehigh.abcshop.service;
 
+import com.meehigh.abcshop.exception.RoleNotFoundException;
 import com.meehigh.abcshop.model.Role;
 import com.meehigh.abcshop.repository.RoleRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,28 +23,29 @@ public class RoleService {
     }
 
     public Role getRoleById(Long id) {
-        if(roleRepository.existsById(id)){
-            return roleRepository.findById(id).get();
-        }
-        return null;
+        return roleRepository.findById(id).
+                orElseThrow(() -> new RoleNotFoundException("Category with id: " +id+ "not found"));
     }
 
     @Transactional
-    public void addNewRole(Role role) {
-        roleRepository.save(role);
+    public Role addNewRole(Role role) {
+        return roleRepository.save(role);
     }
 
     @Transactional
-    public void editRole(Long id,  Role role) {
-        if(roleRepository.existsById(id)) {
-            roleRepository.save(role);
-        }
+    public ResponseEntity<String> editRole(Long id, Role updatedRole) {
+        return roleRepository.findById(id).map(role -> {
+            updatedRole.setId(role.getId());
+            roleRepository.save(updatedRole);
+            return ResponseEntity.status(HttpStatus.OK).body("Role with id: " +id+ " has been updated successfully");
+        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Role with id: " + id + " not found"));
     }
 
     @Transactional
-    public void deleteRole(Long id) {
-        if(roleRepository.existsById(id)) {
-            roleRepository.deleteById(id);
-        }
+    public ResponseEntity<String> deleteRole(Long id) {
+        return roleRepository.findById(id).map(category ->  {
+            roleRepository.deleteById(category.getId());
+            return ResponseEntity.status(HttpStatus.OK).body("Role with id: " +id+ " has been deleted");
+        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Role with id: " +id+ " not found"));
     }
 }

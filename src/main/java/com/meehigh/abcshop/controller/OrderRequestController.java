@@ -1,4 +1,4 @@
 package com.meehigh.abcshop.controller;
 
-public class OrderController {
+public class OrderRequestController {
 }
