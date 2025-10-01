@@ -1,6 +1,9 @@
 package com.meehigh.abcshop.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Entity
@@ -15,6 +18,8 @@ public class OrderLine {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    @NotNull
+    @NotBlank(message = "Quantity cannot be blank")
     private Integer quantity;
 
     @ManyToOne(fetch = FetchType.EAGER)

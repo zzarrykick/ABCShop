@@ -4,12 +4,14 @@ import com.meehigh.abcshop.exception.OrderRequestNotFoundException;
 import com.meehigh.abcshop.model.OrderLine;
 import com.meehigh.abcshop.repository.OrderLineRepository;
 import jakarta.transaction.Transactional;
+import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Data
 @Service
 public class OrderLineService {
 

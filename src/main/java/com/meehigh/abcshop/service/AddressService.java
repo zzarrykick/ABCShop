@@ -6,12 +6,14 @@ import com.meehigh.abcshop.model.Address;
 import com.meehigh.abcshop.model.Category;
 import com.meehigh.abcshop.repository.AddressRepsitory;
 import jakarta.transaction.Transactional;
+import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Data
 @Service
 public class AddressService {
     private final AddressRepsitory addressRepsitory;

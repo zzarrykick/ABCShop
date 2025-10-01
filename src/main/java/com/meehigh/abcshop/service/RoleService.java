@@ -5,12 +5,14 @@ import com.meehigh.abcshop.model.Role;
 import com.meehigh.abcshop.repository.RoleRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Data
 @Service
 public class RoleService {
     private final RoleRepository roleRepository;

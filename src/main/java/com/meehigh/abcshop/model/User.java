@@ -1,6 +1,9 @@
 package com.meehigh.abcshop.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -16,16 +19,29 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    @NotBlank(message = "Username cannot be blank")
     private String username;
 
+    @NotNull
+    @NotBlank(message = "Firstname cannot be blank")
     private String firstName;
 
+    @NotNull
+    @NotBlank(message = "Lastname cannot be blank")
     private String lastName;
 
+    @NotNull
+    @NotBlank(message = "City cannot be blank")
     private String city;
 
+    @Email
+    @NotNull
+    @NotBlank(message = "Email cannot be blank")
     private String email;
 
+    @NotNull
+    @NotBlank(message = "Password cannot be blank")
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)

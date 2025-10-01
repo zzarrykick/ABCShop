@@ -2,6 +2,7 @@ package com.meehigh.abcshop.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -14,8 +15,10 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Product name cannot be blank")
     private String name;
 
+    @NotBlank(message = "Product description cannot be blank")
     private String description;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -24,6 +27,7 @@ public class Product {
 
     private String thumbnailUrl;
 
+    @Min(value = 1, message = "Price must be greater than 0 ")
     private BigDecimal price;
 
     private Integer stock;

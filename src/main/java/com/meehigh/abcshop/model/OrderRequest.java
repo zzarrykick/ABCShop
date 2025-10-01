@@ -1,6 +1,9 @@
 package com.meehigh.abcshop.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -19,6 +22,9 @@ public class OrderRequest {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @NotNull
+    @NotBlank(message = "Total price cannot be blank")
+    @Min(value = 1, message = "Total price must be greater than 0 ")
     private BigDecimal totalPrice;
 
    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -27,6 +33,8 @@ public class OrderRequest {
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Address userAddress;
 
+    @NotNull
+    @NotBlank(message = "Order date cannot be blank")
     private LocalDateTime orderDate;
 
     @OneToMany(mappedBy = "orderRequest", cascade = CascadeType.ALL, orphanRemoval = true)

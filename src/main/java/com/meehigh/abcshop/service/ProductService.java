@@ -5,12 +5,14 @@ import com.meehigh.abcshop.exception.ProductNotFoundException;
 import com.meehigh.abcshop.model.Product;
 import com.meehigh.abcshop.repository.ProductRepository;
 import jakarta.transaction.Transactional;
+import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Data
 @Service
 public class ProductService {
     private final ProductRepository productRepository;

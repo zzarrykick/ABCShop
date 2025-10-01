@@ -3,12 +3,14 @@ package com.meehigh.abcshop.service;
 import com.meehigh.abcshop.model.User;
 import com.meehigh.abcshop.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Data
 @Service
 public class UserService {
     private final UserRepository userRepository;
