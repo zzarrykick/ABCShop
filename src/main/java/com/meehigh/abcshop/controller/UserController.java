@@ -1,5 +1,6 @@
 package com.meehigh.abcshop.controller;
 
+import com.meehigh.abcshop.dto.UserResponse;
 import com.meehigh.abcshop.model.User;
 import com.meehigh.abcshop.service.UserService;
 import jakarta.validation.Valid;
@@ -18,8 +19,7 @@ public class UserController {
     public UserController(UserService userService) {this.userService = userService; }
 
     @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public List<UserResponse> getAllUsers() {return userService.getAllUsers();
     }
 
     @PostMapping

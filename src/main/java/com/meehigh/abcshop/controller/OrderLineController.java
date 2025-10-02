@@ -43,7 +43,7 @@ public class OrderLineController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteOrderC(@PathVariable long id) {
+    public ResponseEntity<String> deleteOrderLine(@PathVariable long id) {
         orderLineService.deleteOrderLine(id);
         return ResponseEntity.ok("OrderLine deleted successfully!");
     }

@@ -39,13 +39,13 @@ public class OrderRequestController {
     @PutMapping("/{id}")
     public ResponseEntity<String> editOrderRequest(@PathVariable long id, @RequestBody OrderRequest updatedOrderRequest) {
         orderRequestService.editOrder(id, updatedOrderRequest);
-        return ResponseEntity.status(HttpStatus.OK).body("Address updated succesfully");
+        return ResponseEntity.status(HttpStatus.OK).body("OrderRequest updated succesfully");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteAddress(@PathVariable long id) {
+    public ResponseEntity<String> deleteOrderRequest(@PathVariable long id) {
         orderRequestService.deleteOrder(id);
-        return ResponseEntity.ok("Order deleted successfully!");
+        return ResponseEntity.ok("OrderRequest deleted successfully!");
     }
 /*
     @ResponseStatus(HttpStatus.NOT_FOUND)

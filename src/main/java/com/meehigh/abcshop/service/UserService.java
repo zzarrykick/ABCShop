@@ -1,5 +1,6 @@
 package com.meehigh.abcshop.service;
 
+import com.meehigh.abcshop.dto.UserResponse;
 import com.meehigh.abcshop.model.User;
 import com.meehigh.abcshop.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -9,6 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.meehigh.abcshop.dto.UserResponse.convertEntityToResponse;
 
 @Data
 @Service
@@ -18,8 +22,10 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserResponse> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return users.stream().map((user) -> convertEntityToResponse(user))
+                .collect(Collectors.toList());
     }
 
     public User getUserById(Long id) {
