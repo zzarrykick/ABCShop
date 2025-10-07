@@ -1,19 +1,28 @@
 package com.meehigh.abcshop.dto;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class RegisterRequest
-{
-    @NotEmpty
+public class RegisterRequest {
+    @NotBlank(message = "Username cannot be blank")
+    private String username;
+
+    @NotBlank(message = "Firstname cannot be blank")
     private String firstName;
-    @NotEmpty
+
+    @NotBlank(message = "Lastname cannot be blank")
     private String lastName;
-    @NotEmpty(message = "Email should not be empty")
+
+    @NotBlank(message = "City cannot be blank")
+    private String city;
+
     @Email
+    @NotBlank(message = "Email cannot be blank")
     private String email;
-    @NotEmpty(message = "Password should not be empty")
+
+    @NotBlank(message = "Password cannot be blank")
     private String password;
+
 }

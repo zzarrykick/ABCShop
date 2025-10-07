@@ -1,7 +1,6 @@
 package com.meehigh.abcshop.dto;
 
 import com.meehigh.abcshop.model.User;
-import com.meehigh.abcshop.model.Role;
 import lombok.Data;
 
 import java.util.List;

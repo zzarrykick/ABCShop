@@ -1,5 +1,6 @@
 package com.meehigh.abcshop.controller;
 
+import com.meehigh.abcshop.dto.RegisterRequest;
 import com.meehigh.abcshop.dto.UserResponse;
 import com.meehigh.abcshop.model.User;
 import com.meehigh.abcshop.service.UserService;
@@ -23,9 +24,9 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<String> addNewUsers(@Valid @RequestBody User user) {
-        userService.addNewUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body("User " + user.getId() + " created successfully");
+    public ResponseEntity<String> addNewUsers(@Valid @RequestBody RegisterRequest userRequestDto) {
+        userService.addNewUser(userRequestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body("User " + userRequestDto.getUsername() + " created successfully");
     }
 
     @GetMapping("/{id}")
