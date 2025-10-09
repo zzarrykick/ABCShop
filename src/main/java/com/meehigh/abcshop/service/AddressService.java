@@ -2,8 +2,10 @@ package com.meehigh.abcshop.service;
 
 import com.meehigh.abcshop.exception.AddressNotFoundException;
 import com.meehigh.abcshop.exception.ProductNotFoundException;
+import com.meehigh.abcshop.exception.RoleNotFoundException;
 import com.meehigh.abcshop.model.Address;
 import com.meehigh.abcshop.model.Category;
+import com.meehigh.abcshop.model.Role;
 import com.meehigh.abcshop.repository.AddressRepsitory;
 import jakarta.transaction.Transactional;
 import lombok.Data;
@@ -28,7 +30,23 @@ public class AddressService {
 
     public Address getAddressById(Long id) {
         return addressRepsitory.findById(id)
-        .orElseThrow(() -> new AddressNotFoundException("Address with id: " +id + " not found"));
+                .orElseThrow(() -> new AddressNotFoundException("Address with id: " + id + " not found"));
+    }
+
+    public List<Address> getAddressByName(String addressName) {
+        try {
+            return addressRepsitory.findByAddressName(addressName);
+        } catch (Exception e) {
+            throw (new AddressNotFoundException("Address with name: " + addressName + "not found"));
+        }
+    }
+
+    public List<Address> getAddressByUserId(long userId) {
+        try {
+            return addressRepsitory.findByUserId(userId);
+        } catch (Exception e) {
+            throw (new AddressNotFoundException("No addresses for user with id: " + userId + " were found"));
+        }
     }
 
     @Transactional
@@ -41,15 +59,15 @@ public class AddressService {
         return addressRepsitory.findById(id).map(address -> {
             updatedAddress.setId(address.getId());
             addressRepsitory.save(updatedAddress);
-            return ResponseEntity.status(HttpStatus.OK).body("Address with id: " +id+ " has been updated successfully");
+            return ResponseEntity.status(HttpStatus.OK).body("Address with id: " + id + " has been updated successfully");
         }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Address with id: " + id + " not found"));
     }
 
     @Transactional
     public ResponseEntity<String> deleteAddress(Long id) {
-        return addressRepsitory.findById(id).map(product ->  {
+        return addressRepsitory.findById(id).map(product -> {
             addressRepsitory.deleteById(product.getId());
             return ResponseEntity.status(HttpStatus.OK).body("Address has been deleted");
-        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Address with id: " +id+ " not found"));
+        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Address with id: " + id + " not found"));
     }
 }

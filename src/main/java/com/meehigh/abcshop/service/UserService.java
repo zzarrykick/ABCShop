@@ -59,11 +59,7 @@ public class UserService {
         user.setPassword(userRegisterDTO.getPassword());
         user.setCity(userRegisterDTO.getCity());
         user.setUsername(userRegisterDTO.getUsername());
-        Role role = roleRepository.findByRoleName("ROLE_USER");
-        if (role == null) {
-            role = checkUserRoleExist();
-        }
-        user.setRoles(Set.of(role));
+        user.setRoles(Set.of(checkUserRoleExist("ROLE_USER")));
         return userRepository.save(user);
     }
 
@@ -84,10 +80,14 @@ public class UserService {
         }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with id: " + id + " not found"));
     }
 
-    public Role checkUserRoleExist() {
-
+    @Transactional
+    public Role checkUserRoleExist(String roleName) {
         Role role = new Role();
-        role.setRoleName("ROLE_USER");
-        return roleRepository.save(role);
+        role = roleRepository.findByRoleName(roleName);
+        if (role == null) {
+            role.setRoleName(roleName);
+            return roleRepository.save(role);
+        }
+        return role;
     }
 }

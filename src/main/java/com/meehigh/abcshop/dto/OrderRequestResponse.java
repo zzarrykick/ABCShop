@@ -20,17 +20,7 @@ public class OrderRequestResponse {
 
     private Status status;
 
-    //TODO
-    /*
-    public static OrderRequestResponse convertEntityToResponse(OrderRequest orderRequest) {
-        OrderRequestResponse orderRequestResponse = new OrderRequestResponse();
-        OrderRequestResponse.setName(orderRequest.getUser());
-        userResponse.setLastName(user.getLastName());
-        userResponse.setEmail(user.getEmail());
-        userResponse.setRoles(user.getRoles().stream().map(role -> role.getRoleName()).collect(Collectors.toList()));
-        return userResponse;
-    }
-    */
+
 
     // conversie din entitate în DTO
     public static OrderRequestResponse convertEntityToResponse(OrderRequest orderRequest) {

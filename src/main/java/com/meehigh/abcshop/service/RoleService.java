@@ -16,6 +16,7 @@ import java.util.List;
 @Service
 public class RoleService {
     private final RoleRepository roleRepository;
+
     public RoleService(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
     }
@@ -26,7 +27,15 @@ public class RoleService {
 
     public Role getRoleById(Long id) {
         return roleRepository.findById(id).
-                orElseThrow(() -> new RoleNotFoundException("Category with id: " +id+ "not found"));
+                orElseThrow(() -> new RoleNotFoundException("Role with id: " + id + "not found"));
+    }
+
+    public Role getRoleByName(String roleName) {
+        try {
+            return roleRepository.findByRoleName(roleName);
+        } catch (Exception e) {
+            throw (new RoleNotFoundException("Role with name: " + roleName + "not found"));
+        }
     }
 
     @Transactional
@@ -39,15 +48,15 @@ public class RoleService {
         return roleRepository.findById(id).map(role -> {
             updatedRole.setId(role.getId());
             roleRepository.save(updatedRole);
-            return ResponseEntity.status(HttpStatus.OK).body("Role with id: " +id+ " has been updated successfully");
+            return ResponseEntity.status(HttpStatus.OK).body("Role with id: " + id + " has been updated successfully");
         }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Role with id: " + id + " not found"));
     }
 
     @Transactional
     public ResponseEntity<String> deleteRole(Long id) {
-        return roleRepository.findById(id).map(category ->  {
+        return roleRepository.findById(id).map(category -> {
             roleRepository.deleteById(category.getId());
-            return ResponseEntity.status(HttpStatus.OK).body("Role with id: " +id+ " has been deleted");
-        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Role with id: " +id+ " not found"));
+            return ResponseEntity.status(HttpStatus.OK).body("Role with id: " + id + " has been deleted");
+        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Role with id: " + id + " not found"));
     }
 }

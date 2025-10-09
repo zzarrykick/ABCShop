@@ -15,7 +15,9 @@ public class RoleController {
 
     private final RoleService roleService;
 
-    public RoleController(RoleService roleService) {this.roleService = roleService; }
+    public RoleController(RoleService roleService) {
+        this.roleService = roleService;
+    }
 
     @GetMapping
     public List<Role> getAllRoles() {
@@ -31,6 +33,12 @@ public class RoleController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getRoleById(@PathVariable long id) {
         Role role = roleService.getRoleById(id);
+        return ResponseEntity.ok(role);
+    }
+
+    @GetMapping("/{roleName}")
+    public ResponseEntity<?> getRoleByName(@PathVariable String roleName) {
+        Role role = roleService.getRoleByName(roleName);
         return ResponseEntity.ok(role);
     }
 

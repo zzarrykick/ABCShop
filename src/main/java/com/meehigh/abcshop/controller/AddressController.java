@@ -1,6 +1,7 @@
 package com.meehigh.abcshop.controller;
 
 import com.meehigh.abcshop.model.Address;
+import com.meehigh.abcshop.model.Role;
 import com.meehigh.abcshop.service.AddressService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -33,6 +34,18 @@ public class AddressController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getAddressById(@PathVariable long id) {
         Address address = addressService.getAddressById(id);
+        return ResponseEntity.ok(address);
+    }
+
+    @GetMapping("/{addressName}")
+    public ResponseEntity<?> getAddressByName(@PathVariable String addressName) {
+        List<Address> address = addressService.getAddressByName(addressName);
+        return ResponseEntity.ok(address);
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<?> getAddressByUserId(@PathVariable long userId) {
+        List<Address> address = addressService.getAddressByUserId(userId);
         return ResponseEntity.ok(address);
     }
 
