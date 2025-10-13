@@ -1,6 +1,6 @@
 package com.meehigh.abcshop.service;
 
-import com.meehigh.abcshop.exception.OrderRequestNotFoundException;
+import com.meehigh.abcshop.exception.OrderNotFoundException;
 import com.meehigh.abcshop.model.OrderLine;
 import com.meehigh.abcshop.repository.OrderLineRepository;
 import jakarta.transaction.Transactional;
@@ -26,7 +26,7 @@ public class OrderLineService {
 
     public OrderLine getOrderLineById(Long id) {
         return orderLineRepository.findById(id)
-                .orElseThrow(()-> new OrderRequestNotFoundException("OrderLine with id: " +id + " not found"));
+                .orElseThrow(()-> new OrderNotFoundException("OrderLine with id: " +id + " not found"));
     }
 
     @Transactional

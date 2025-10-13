@@ -32,8 +32,8 @@ public class GlobalExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(OrderRequestNotFoundException.class)
-    public ErrorResponse handleOrderRequestNotFound(OrderRequestNotFoundException ex){
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ErrorResponse handleOrderRequestNotFound(OrderNotFoundException ex){
         return new ErrorResponse(ex.getMessage());
     }
 

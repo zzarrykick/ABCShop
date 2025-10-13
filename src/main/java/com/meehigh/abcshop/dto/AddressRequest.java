@@ -1,22 +1,20 @@
 package com.meehigh.abcshop.dto;
 
 import com.meehigh.abcshop.model.Address;
-import com.meehigh.abcshop.model.User;
-import lombok.Data;
 
-@Data
-public class AddressResponse {
+public class AddressRequest {
 
-    private Long id;
     private String name;
     private String country;
     private String city;
     private String street;
     private String zipCode;
-    private User userId;
 
+    //TODO - Cum ar trebui sa arate conversia in acest caz?
     // conversie din entitate în DTO
-    public static AddressResponse convertEntityToResponse(Address address) {
+
+
+    public static AddressRequest convertEntityToResponse(Address address) {
         AddressResponse addressResponse = new AddressResponse();
 
         // extragem datele
@@ -29,4 +27,5 @@ public class AddressResponse {
 
         return addressResponse;
     }
+
 }

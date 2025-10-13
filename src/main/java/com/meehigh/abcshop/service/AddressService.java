@@ -1,11 +1,7 @@
 package com.meehigh.abcshop.service;
 
 import com.meehigh.abcshop.exception.AddressNotFoundException;
-import com.meehigh.abcshop.exception.ProductNotFoundException;
-import com.meehigh.abcshop.exception.RoleNotFoundException;
 import com.meehigh.abcshop.model.Address;
-import com.meehigh.abcshop.model.Category;
-import com.meehigh.abcshop.model.Role;
 import com.meehigh.abcshop.repository.AddressRepsitory;
 import jakarta.transaction.Transactional;
 import lombok.Data;

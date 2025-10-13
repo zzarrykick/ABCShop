@@ -2,8 +2,6 @@ package com.meehigh.abcshop.service;
 
 import com.meehigh.abcshop.dto.RegisterRequest;
 import com.meehigh.abcshop.dto.UserResponse;
-import com.meehigh.abcshop.exception.CategoryNotFoundException;
-import com.meehigh.abcshop.model.Category;
 import com.meehigh.abcshop.model.Role;
 import com.meehigh.abcshop.model.User;
 import com.meehigh.abcshop.repository.RoleRepository;
@@ -14,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;

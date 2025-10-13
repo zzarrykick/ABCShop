@@ -6,7 +6,6 @@ import com.meehigh.abcshop.model.Category;
 import com.meehigh.abcshop.model.Product;
 import com.meehigh.abcshop.repository.CategoryRepository;
 import com.meehigh.abcshop.repository.ProductRepository;
-import jakarta.transaction.Transactional;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,7 +45,7 @@ public class ProductService {
 
         return productRepository.findById(id).map(product -> {
             if (updatedProduct.getCategory() != null && updatedProduct.getCategory().getId() != 0) {
-                Category category = categoryRepository.findById(updatedProduct.getCategory().getId())
+                categoryRepository.findById(updatedProduct.getCategory().getId())
                         .orElseThrow(() -> new CategoryNotFoundException("Category not found"));
             }
             updatedProduct.setId(product.getId());

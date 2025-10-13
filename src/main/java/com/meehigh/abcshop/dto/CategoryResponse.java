@@ -1,6 +1,5 @@
 package com.meehigh.abcshop.dto;
 
-import com.meehigh.abcshop.model.Address;
 import com.meehigh.abcshop.model.Category;
 import lombok.Data;
 

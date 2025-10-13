@@ -13,7 +13,8 @@ import java.util.List;
 
 @Entity
 @Data
-public class OrderRequest {
+@Table(name = "order_list")
+public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

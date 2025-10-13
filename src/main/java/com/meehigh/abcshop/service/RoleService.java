@@ -3,7 +3,6 @@ package com.meehigh.abcshop.service;
 import com.meehigh.abcshop.exception.RoleNotFoundException;
 import com.meehigh.abcshop.model.Role;
 import com.meehigh.abcshop.repository.RoleRepository;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
