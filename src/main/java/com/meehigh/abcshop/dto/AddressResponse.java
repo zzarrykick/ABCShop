@@ -1,5 +1,6 @@
 package com.meehigh.abcshop.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.meehigh.abcshop.model.Address;
 import com.meehigh.abcshop.model.User;
 import lombok.Data;
@@ -18,7 +19,7 @@ public class AddressResponse {
     private String city;
     private String street;
     private String zipCode;
-    private User userId;
+    private User user;
 
     // conversie din entitate în DTO
     public static AddressResponse convertEntityToResponse(Address address) {
@@ -30,7 +31,7 @@ public class AddressResponse {
         addressResponse.setCity(address.getCity());
         addressResponse.setStreet(address.getStreet());
         addressResponse.setZipCode(address.getZipCode());
-        addressResponse.setUserId(address.getUserId());
+        addressResponse.setUser(address.getUser());
 
         return addressResponse;
     }

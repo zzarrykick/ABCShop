@@ -20,7 +20,7 @@ public class Order {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @NotNull
@@ -28,17 +28,17 @@ public class Order {
     @Min(value = 1, message = "Total price must be greater than 0 ")
     private BigDecimal totalPrice;
 
-   @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+   @OneToOne(fetch = FetchType.LAZY)
     private Address deliveryAddress;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     private Address userAddress;
 
     @NotNull
     @NotBlank(message = "Order date cannot be blank")
     private LocalDateTime orderDate;
 
-    @OneToMany(mappedBy = "orderRequest", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order")
     private List<OrderLine> orderLines = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)

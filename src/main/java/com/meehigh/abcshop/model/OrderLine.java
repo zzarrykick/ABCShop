@@ -21,7 +21,7 @@ public class OrderLine {
     @NotBlank(message = "Quantity cannot be blank")
     private Integer quantity;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 }

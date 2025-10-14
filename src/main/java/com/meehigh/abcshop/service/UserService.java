@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 import static com.meehigh.abcshop.dto.UserResponse.convertEntityToResponse;
 
+
 @Data
 @Service
 public class UserService {
@@ -79,9 +80,9 @@ public class UserService {
 
     @Transactional
     public Role checkUserRoleExist(String roleName) {
-        Role role = new Role();
-        role = roleRepository.findByRoleName(roleName);
+        Role role = roleRepository.findByRoleName(roleName);
         if (role == null) {
+            role = new Role();
             role.setRoleName(roleName);
             return roleRepository.save(role);
         }

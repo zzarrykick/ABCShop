@@ -21,7 +21,7 @@ public class Product {
     @NotBlank(message = "Product description cannot be blank")
     private String description;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="category_id")
     private Category category;
 
@@ -32,6 +32,6 @@ public class Product {
 
     private Integer stock;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", orphanRemoval = true)
     private List<OrderLine> orderLine;
 }

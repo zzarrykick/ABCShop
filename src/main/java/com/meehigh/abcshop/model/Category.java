@@ -19,7 +19,7 @@ public class Category {
     /*@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Category> childrenCategory = new ArrayList<>();*/
 
-    @ManyToOne(fetch = FetchType.EAGER)     // to be clarified
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="parentId")
     private Category parent;
 }

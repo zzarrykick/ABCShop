@@ -24,20 +24,6 @@ public class AddressRequest {
     // conversie din entitate în DTO
 
 
-    public static AddressRequest convertEntityToResponse(Address address) {
-        AddressResponse addressResponse = new AddressResponse();
-
-        // extragem datele
-        addressResponse.setName(address.getName());
-        addressResponse.setCountry(address.getCountry());
-        addressResponse.setCity(address.getCity());
-        addressResponse.setStreet(address.getStreet());
-        addressResponse.setZipCode(address.getZipCode());
-        addressResponse.setUserId(address.getUserId());
-
-        return addressResponse;
-    }
-
 }
 
 

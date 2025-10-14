@@ -19,8 +19,6 @@ public class Role {
     @NotBlank
     private String roleName;
 
-    @NotNull
-    @NotBlank(message = "Role cannot be blank")
     @ManyToMany(mappedBy = "roles")
     private Set<User> users = new HashSet<>();
 }

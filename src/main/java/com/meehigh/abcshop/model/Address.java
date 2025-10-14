@@ -48,8 +48,8 @@ public class Address {
 
     private String zipCode;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private User userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 }
 
 /*
