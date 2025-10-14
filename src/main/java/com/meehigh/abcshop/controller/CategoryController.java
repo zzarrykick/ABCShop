@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+//Controller - Primește cereri HTTP de la utilizator
 @RestController
 @RequestMapping("api/categories")
 public class CategoryController {
