@@ -47,6 +47,7 @@ public class CategoryService {
     }
 
     //TODO - 16.10.2025 - rezolvare erori, testare aplicatie
+    //TODO - Explicare parte de autentificare + SpringSecurity
     @Transactional
     public Category addCategory(CategoryRequest category) {
         return categoryRepository.save(CategoryRequest.convertToEntity(category));
