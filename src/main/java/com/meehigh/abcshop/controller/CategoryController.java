@@ -25,26 +25,14 @@ public class CategoryController {
         return categoryService.getAllCategories();
     }
 
-    /* //TODO - varianta initiala
+
     @PostMapping
-    public ResponseEntity<String> addCategory(@Valid @RequestBody Category category) {
+    public ResponseEntity<String> addCategory(@Valid @RequestBody CategoryRequest category) {
         categoryService.addCategory(category);
         return ResponseEntity.status(HttpStatus.CREATED).body("Category " + category.getName() + " created successfully");
-    }*/
-
-    //TODO - varianta 2
-    @PostMapping
-    public ResponseEntity<String> addCategory(@RequestBody CategoryRequest req) {
-        Category category = new Category();
-        category.setName(req.getName());
-        if (req.getParentId() != null) {
-            Category parent = categoryService.getCategoryById(req.getParentId());
-            category.setParent(parent);
-        }
-        categoryService.addCategory(category);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body("Category '" + category.getName() + "' created successfully");
     }
+
+
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getCategoryById(@PathVariable long id) {
@@ -53,7 +41,7 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> editCategory(@PathVariable long id, @RequestBody Category updatedCategory) {
+    public ResponseEntity<String> editCategory(@PathVariable long id, @RequestBody CategoryRequest updatedCategory) {
         categoryService.editCategory(id, updatedCategory);
         return ResponseEntity.status(HttpStatus.OK).body("Category updated succesfully");
     }

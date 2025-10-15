@@ -1,6 +1,9 @@
 package com.meehigh.abcshop.dto;
 
 import com.meehigh.abcshop.model.Address;
+import com.meehigh.abcshop.model.Category;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 //Request: ce vine de la client către server → conține doar informațiile necesare pentru creare/modificare.
@@ -13,23 +16,6 @@ import lombok.Data;
 public class AddressRequest {
     //declară DTO-ul AddressRequest --> Numele sugerează: DTO folosit la creare/cerere (request)
     // din client → backend.
-
-    private String name;
-    private String country;
-    private String city;
-    private String street;
-    private String zipCode;
-
-    //TODO - Cum ar trebui sa arate conversia in acest caz?
-    // conversie din entitate în DTO
-
-
-}
-
-
-/*//TODO - inspiratie
-*    @Data
-public class AddressRequest {
 
     @NotNull
     @NotBlank(message = "Address name cannot be blank")
@@ -49,22 +35,14 @@ public class AddressRequest {
 
     private String zipCode;
 
-    // ID-ul utilizatorului la care este asociată adresa
-    private Long userId;
 
-    // conversie din DTO -> entitate
-    public Address toEntity() {
-        Address address = new Address();
-        address.setName(this.name);
-        address.setCountry(this.country);
-        address.setCity(this.city);
-        address.setStreet(this.street);
-        address.setZipCode(this.zipCode);
-        // userId se va seta în service, după ce se caută user-ul din baza de date
-        return address;
-    }
+
+
 }
 
+
+
+/*
 //TODO - Explicație clară pt AddressRequest
 
 Reprezintă datele primite de la client (ex. când creezi sau editezi o adresă).

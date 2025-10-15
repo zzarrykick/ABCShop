@@ -21,23 +21,4 @@ public class OrderResponse {
     private List<OrderLineResponse> orderLines = new ArrayList<>();
     private Status status;
 
-    // conversie din entitate în DTO
-    public static OrderResponse convertEntityToResponse(Order order) {
-        OrderResponse orderResponse = new OrderResponse();
-
-        // extragem datele
-        orderResponse.setUser(UserResponse.convertEntityToResponse(order.getUser()));
-        orderResponse.setTotalPrice(order.getTotalPrice());
-        orderResponse.setDeliveryAddress(AddressResponse.convertEntityToResponse(order.getDeliveryAddress()));
-        orderResponse.setUserAddress(AddressResponse.convertEntityToResponse(order.getUserAddress()));
-        orderResponse.setOrderDate(order.getOrderDate());
-        orderResponse.setOrderLines(
-                order.getOrderLines().stream()
-                        .map(orderLine -> OrderLineResponse.convertEntityToResponse(orderLine))
-                        .collect(Collectors.toList())
-        );
-        orderResponse.setStatus(order.getStatus());
-
-        return orderResponse;
-    }
 }

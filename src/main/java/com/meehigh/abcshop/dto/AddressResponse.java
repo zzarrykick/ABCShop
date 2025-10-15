@@ -21,20 +21,7 @@ public class AddressResponse {
     private String zipCode;
     private User user;
 
-    // conversie din entitate în DTO
-    public static AddressResponse convertEntityToResponse(Address address) {
-        AddressResponse addressResponse = new AddressResponse();
 
-        // extragem datele
-        addressResponse.setName(address.getName());
-        addressResponse.setCountry(address.getCountry());
-        addressResponse.setCity(address.getCity());
-        addressResponse.setStreet(address.getStreet());
-        addressResponse.setZipCode(address.getZipCode());
-        addressResponse.setUser(address.getUser());
-
-        return addressResponse;
-    }
 }
 
 /*

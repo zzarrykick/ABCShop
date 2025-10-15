@@ -23,11 +23,6 @@ public class Order {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @NotNull
-    @NotBlank(message = "Total price cannot be blank")
-    @Min(value = 1, message = "Total price must be greater than 0 ")
-    private BigDecimal totalPrice;
-
    @OneToOne(fetch = FetchType.LAZY)
     private Address deliveryAddress;
 

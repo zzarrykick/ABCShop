@@ -6,6 +6,7 @@ import com.meehigh.abcshop.model.Address;
 import com.meehigh.abcshop.model.User;
 import com.meehigh.abcshop.repository.AddressRepository;
 import com.meehigh.abcshop.repository.UserRepository;
+import com.meehigh.abcshop.utils.Utils;
 import jakarta.transaction.Transactional;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
@@ -47,7 +48,7 @@ public class AddressService {
     public List<AddressResponse> getAddressByUserId(Long userId) {
         try {
             User userFound = userRepository.findById(userId).get();
-            return addressRepository.findByUser(userFound).stream().map(user -> AddressResponse.convertEntityToResponse(user)).collect(Collectors.toList());
+            return addressRepository.findByUser(userFound).stream().map(user -> Utils.addressEntityToResponse(user)).collect(Collectors.toList());
         } catch (Exception e) {
             throw (new AddressNotFoundException("No addresses for user with id: " + userId + " were found"));
         }

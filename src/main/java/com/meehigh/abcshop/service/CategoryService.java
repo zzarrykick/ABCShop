@@ -1,5 +1,6 @@
 package com.meehigh.abcshop.service;
 
+import com.meehigh.abcshop.dto.CategoryRequest;
 import com.meehigh.abcshop.exception.CategoryNotFoundException;
 import com.meehigh.abcshop.model.Category;
 import com.meehigh.abcshop.repository.CategoryRepository;
@@ -45,17 +46,18 @@ public class CategoryService {
                 .orElseThrow(() -> new RuntimeException("Parent category not found"));
     }
 
-
+    //TODO - 16.10.2025 - rezolvare erori, testare aplicatie
     @Transactional
-    public Category addCategory(Category category) {
-        return categoryRepository.save(category);
+    public Category addCategory(CategoryRequest category) {
+        return categoryRepository.save(CategoryRequest.convertToEntity(category));
     }
 
     @Transactional
-    public ResponseEntity<String> editCategory(Long id, Category updatedCategory) {
-        return categoryRepository.findById(id).map(category -> {
-            updatedCategory.setId(category.getId());
-            categoryRepository.save(updatedCategory);
+    public ResponseEntity<String> editCategory(Long id, CategoryRequest updatedCategory) {
+        Category category = CategoryRequest.convertToEntity(updatedCategory);
+        return categoryRepository.findById(id).map(categ-> {
+            category.setId(categ.getId());
+            categoryRepository.save(category);
             return ResponseEntity.status(HttpStatus.OK).body("Category with id: " +id+ " has been updated successfully");
         }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Category with id: " + id + " not found"));
     }

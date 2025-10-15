@@ -23,23 +23,6 @@ public class UserResponse {
     private List<AddressResponse> addresses = new ArrayList<>();
 
 
-    public static UserResponse convertEntityToResponse(User user) {
-        UserResponse userResponse = new UserResponse();
-        userResponse.setId(user.getId());
-        userResponse.setUsername(user.getUsername());
-        userResponse.setFirstName(user.getFirstName());
-        userResponse.setLastName(user.getLastName());
-        userResponse.setCity(user.getCity());
-        userResponse.setEmail(user.getEmail());
-        userResponse.setMessageChannel(user.getMessageChannel());
-        userResponse.setRoles(user.getRoles().stream()
-                .map(role -> RoleResponse.convertEntityToResponse(role)).collect(Collectors.toSet()));
-        userResponse.setOrders(user.getOrders().stream()
-                .map(order -> OrderResponse.convertEntityToResponse(order)).collect(Collectors.toList()));
-        userResponse.setAddresses(user.getAddresses().stream()
-                .map(address -> AddressResponse.convertEntityToResponse(address)).collect(Collectors.toList()));
-        return userResponse;
-    }
 
 //    // Safe conversion method
 //    public static UserResponse convertEntityToResponse(User user) {
