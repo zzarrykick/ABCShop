@@ -34,10 +34,17 @@ public class CategoryService {
         });
     }*/
 
+    /*
     public Category getCategoryById(long id) {
         return categoryRepository.findById(id).
                 orElseThrow(() -> new CategoryNotFoundException("Category with id: " +id+ "not found"));
+    } */
+
+    public Category getCategoryById(Long id) {
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Parent category not found"));
     }
+
 
     @Transactional
     public Category addCategory(Category category) {

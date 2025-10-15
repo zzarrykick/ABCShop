@@ -1,5 +1,6 @@
 package com.meehigh.abcshop.controller;
 
+import com.meehigh.abcshop.dto.CategoryRequest;
 import com.meehigh.abcshop.model.Category;
 import com.meehigh.abcshop.service.CategoryService;
 import jakarta.validation.Valid;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 //Controller - Primește cereri HTTP de la utilizator
 @RestController
-@RequestMapping("api/categories")
+@RequestMapping("/api/categories")
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -24,10 +25,25 @@ public class CategoryController {
         return categoryService.getAllCategories();
     }
 
+    /* //TODO - varianta initiala
     @PostMapping
     public ResponseEntity<String> addCategory(@Valid @RequestBody Category category) {
         categoryService.addCategory(category);
         return ResponseEntity.status(HttpStatus.CREATED).body("Category " + category.getName() + " created successfully");
+    }*/
+
+    //TODO - varianta 2
+    @PostMapping
+    public ResponseEntity<String> addCategory(@RequestBody CategoryRequest req) {
+        Category category = new Category();
+        category.setName(req.getName());
+        if (req.getParentId() != null) {
+            Category parent = categoryService.getCategoryById(req.getParentId());
+            category.setParent(parent);
+        }
+        categoryService.addCategory(category);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body("Category '" + category.getName() + "' created successfully");
     }
 
     @GetMapping("/{id}")
