@@ -161,7 +161,7 @@ public class Utils {
         user.setEmail(userRequest.getEmail());
         user.setMessageChannel(userRequest.getMessageChannel());
         user.setRoles(userRequest.getRoles().stream()
-                .map(role -> roleResponseToEntity(role)).collect(Collectors.toSet()));
+                .map(role -> roleResponseToEntity(role)).collect(Collectors.toList()));
         user.setAddresses(userRequest.getAddresses().stream()
                 .map(addressResponse -> addressResponseToEntity(addressResponse)).collect(Collectors.toList()));
         return user;
@@ -208,7 +208,7 @@ public class Utils {
         user.setEmail(userResponse.getEmail());
         user.setMessageChannel(userResponse.getMessageChannel());
         user.setRoles(userResponse.getRoles().stream()
-                .map(role -> roleResponseToEntity(role)).collect(Collectors.toSet()));
+                .map(role -> roleResponseToEntity(role)).collect(Collectors.toList()));
         user.setOrders(userResponse.getOrders().stream()
                 .map(order -> orderResponseToEntity(order)).collect(Collectors.toList()));
         user.setAddresses(userResponse.getAddresses().stream()

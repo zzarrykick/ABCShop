@@ -5,8 +5,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -20,7 +22,7 @@ public class Role {
     @NotBlank
     private String roleName;
 
-    @JsonIgnore  // <-- IMPORTANT, oprește serializarea în lanț
-    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY) //previne încărcarea dublă
-    private Set<User> users = new HashSet<>();
+    @JsonIgnore // Ignorăm pentru JSON — previne recursivitate și concurrent modification
+    @ManyToMany(mappedBy = "roles")
+    private List<User> users;
 }

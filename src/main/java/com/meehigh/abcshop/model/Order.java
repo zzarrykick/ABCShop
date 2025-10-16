@@ -20,15 +20,15 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonIgnore // Ignorăm pentru JSON — previne recursivitate și concurrent modification
-    @ManyToOne(fetch = FetchType.LAZY)
+    //@JsonIgnore // Ignorăm pentru JSON — previne recursivitate și concurrent modification
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
-   @OneToOne(fetch = FetchType.LAZY)
+   @OneToOne(fetch = FetchType.EAGER)
     private Address deliveryAddress;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     private Address userAddress;
 
     @NotNull

@@ -20,8 +20,10 @@ public class UserController {
     public UserController(UserService userService) {this.userService = userService; }
 
     @GetMapping
-    public List<UserResponse> getAllUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<?> getAllUsers() {
+
+        var response = userService.getAllUsers();
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping

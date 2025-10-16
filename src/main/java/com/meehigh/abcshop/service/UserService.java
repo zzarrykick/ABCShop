@@ -34,11 +34,12 @@ public class UserService {
         this.roleRepository = roleRepository;
     }
 
-    @Transactional (readOnly = true)
-    public List<UserResponse> getAllUsers() {
-        List<User> users = userRepository.findAll();
-        return users.stream().map((user) -> Utils.userEntityToResponse(user))
-                .collect(Collectors.toList());
+
+    public List<User> getAllUsers() {
+//        List<User> users = userRepository.findAll();
+//        return users.stream().map((user) -> Utils.userEntityToResponse(user))
+//                .collect(Collectors.toList());
+        return userRepository.findAll();
     }
 
 
@@ -59,7 +60,12 @@ public class UserService {
         user.setPassword(userRegisterDTO.getPassword());
         user.setCity(userRegisterDTO.getCity());
         user.setUsername(userRegisterDTO.getUsername());
-        user.setRoles(Set.of(checkUserRoleExist("ROLE_USER")));
+        user.setMessageChannel(userRegisterDTO.getMessageChannel());
+        Role role = roleRepository.findByRoleName("ROLE_USER");
+        if (role == null) {
+            role = checkUserRoleExist("ROLE_USER");
+        }
+        user.setRoles(List.of(role));
         return userRepository.save(user);
     }
 
@@ -82,12 +88,8 @@ public class UserService {
 
     @Transactional
     public Role checkUserRoleExist(String roleName) {
-        Role role = roleRepository.findByRoleName(roleName);
-        if (role == null) {
-            role = new Role();
-            role.setRoleName(roleName);
-            return roleRepository.save(role);
-        }
-        return role;
+        Role role1 = new Role();
+        role1.setRoleName(roleName);
+        return roleRepository.save(role1);
     }
 }

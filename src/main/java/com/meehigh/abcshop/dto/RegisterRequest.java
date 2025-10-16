@@ -49,10 +49,7 @@ public class RegisterRequest {
     private String password;
 
     private String messageChannel;
-    private Set<RoleResponse> roles = new HashSet<>();
-    private List<AddressResponse> addresses = new ArrayList<>();
-
-
-
+    //private Set<RoleResponse> roles = new HashSet<>();
+    //private List<AddressResponse> addresses = new ArrayList<>();
 
 }

@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -47,22 +48,20 @@ public class User {
     private String password;
 
 
-    @JsonIgnore // Ignorăm pentru JSON — previne recursivitate și concurrent modification
-    @ManyToMany(fetch = FetchType.LAZY)
+    //@JsonIgnore // Ignorăm pentru JSON — previne recursivitate și concurrent modification
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<Role> roles = new HashSet<>();
+    private List<Role> roles = new ArrayList<>();
 
     private String messageChannel;
 
-    @JsonIgnore // Ignorăm pentru JSON — previne recursivitate și concurrent modification
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders = new ArrayList<>();
 
-    @JsonIgnore // Ignorăm pentru JSON — previne recursivitate și concurrent modification
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     //@JsonIgnoreProperties("user")
     private List<Address> addresses = new ArrayList<>();
