@@ -35,6 +35,7 @@ public class Utils {
         AddressResponse addressResponse = new AddressResponse();
 
         // extragem datele
+        addressResponse.setId(address.getId());
         addressResponse.setName(address.getName());
         addressResponse.setCountry(address.getCountry());
         addressResponse.setCity(address.getCity());

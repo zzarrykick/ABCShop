@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 //Service - Ține logica aplicației, folosește repository-ul
 @Data
 @Service
@@ -28,14 +29,23 @@ public class AddressService {
         this.userRepository = userRepository;
     }
 
-    public List<Address> getAllAddress() {
-        return addressRepository.findAll();
+    public List<AddressResponse> getAllAddress() {
+        return addressRepository.findAll().stream()
+                .map(address -> Utils.addressEntityToResponse(address))
+                .collect(Collectors.toList());
     }
+/*
+    public AddressResponse getAddressById(Long id) {
+        return Utils.addressEntityToResponse(addressRepository.findById(id))
+                .orElseThrow(() -> new AddressNotFoundException("Address with id: " + id + " not found"));
+    }*/
 
-    public Address getAddressById(Long id) {
+    public AddressResponse getAddressById(Long id) {
         return addressRepository.findById(id)
+                .map( address ->  Utils.addressEntityToResponse(address))
                 .orElseThrow(() -> new AddressNotFoundException("Address with id: " + id + " not found"));
     }
+
 
     public List<Address> getAddressByName(String addressName) {
         try {

@@ -10,14 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-//Controller – primește cererea de la utilizator (ex: HTTP Request)
-/*
-@RestController = combina @Controller + @ResponseBody.
- Înseamnă că metodele returnează direct corpul răspunsului (de obicei JSON), nu o pagină HTML.
 
-@RequestMapping("api/addresses") = ruta de bază pentru toate endpoint-urile din acest controller.
-Toate @GetMapping, @PostMapping etc. vor fi sub http://.../api/addresses.
-*/
 @RestController
 @RequestMapping("api/addresses")
 public class AddressController {
@@ -29,7 +22,7 @@ public class AddressController {
     }
 
     @GetMapping
-    public List<Address> getAllAddress() {
+    public List<AddressResponse> getAllAddress() {
         return addressService.getAllAddress();
     }
 
@@ -41,11 +34,11 @@ public class AddressController {
 
     @GetMapping("/getbyid/{id}")
     public ResponseEntity<?> getAddressById(@PathVariable long id) {
-        Address address = addressService.getAddressById(id);
+        AddressResponse address = addressService.getAddressById(id);
         return ResponseEntity.ok(address);
     }
 
-    @GetMapping("/{addressName}")
+    @GetMapping("/getbyname/{addressName}")
     public ResponseEntity<?> getAddressByName(@PathVariable String addressName) {
         List<Address> address = addressService.getAddressByName(addressName);
         return ResponseEntity.ok(address);
