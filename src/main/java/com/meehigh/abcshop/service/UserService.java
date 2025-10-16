@@ -6,7 +6,8 @@ import com.meehigh.abcshop.model.Role;
 import com.meehigh.abcshop.model.User;
 import com.meehigh.abcshop.repository.RoleRepository;
 import com.meehigh.abcshop.repository.UserRepository;
-import jakarta.transaction.Transactional;
+import com.meehigh.abcshop.utils.Utils;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +16,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static com.meehigh.abcshop.dto.UserResponse.convertEntityToResponse;
 
 
 @Data
@@ -35,11 +34,14 @@ public class UserService {
         this.roleRepository = roleRepository;
     }
 
+    @Transactional (readOnly = true)
     public List<UserResponse> getAllUsers() {
         List<User> users = userRepository.findAll();
-        return users.stream().map((user) -> convertEntityToResponse(user))
+        return users.stream().map((user) -> Utils.userEntityToResponse(user))
                 .collect(Collectors.toList());
     }
+
+
 
     public User getUserById(Long id) {
         if (userRepository.existsById(id)) {

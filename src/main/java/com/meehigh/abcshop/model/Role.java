@@ -1,5 +1,6 @@
 package com.meehigh.abcshop.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -19,6 +20,7 @@ public class Role {
     @NotBlank
     private String roleName;
 
-    @ManyToMany(mappedBy = "roles")
+    @JsonIgnore  // <-- IMPORTANT, oprește serializarea în lanț
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY) //previne încărcarea dublă
     private Set<User> users = new HashSet<>();
 }

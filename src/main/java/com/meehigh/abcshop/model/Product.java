@@ -21,7 +21,7 @@ public class Product {
     @NotBlank(message = "Product description cannot be blank")
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER) //Cu LAZY -> eroare legată de câmpul category din Product, care e încărcat LAZY și Jackson nu știe cum să-l serializeze.
     @JoinColumn(name="category_id")
     private Category category;
 

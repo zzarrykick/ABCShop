@@ -7,7 +7,7 @@ import com.meehigh.abcshop.model.User;
 import com.meehigh.abcshop.repository.AddressRepository;
 import com.meehigh.abcshop.repository.UserRepository;
 import com.meehigh.abcshop.utils.Utils;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -76,3 +76,12 @@ public class AddressService {
         }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Address with id: " + id + " not found"));
     }
 }
+
+/*
+@Service → spune lui Spring că această clasă este un “bean”
+care oferă funcționalități de serviciu (logică de business).
+
+@Data → vine din Lombok, și generează automat: getteri, setteri, toString, equals, hashCode.
+
+
+*/

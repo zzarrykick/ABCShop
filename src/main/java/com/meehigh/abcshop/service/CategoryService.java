@@ -1,10 +1,10 @@
 package com.meehigh.abcshop.service;
 
 import com.meehigh.abcshop.dto.CategoryRequest;
-import com.meehigh.abcshop.exception.CategoryNotFoundException;
 import com.meehigh.abcshop.model.Category;
 import com.meehigh.abcshop.repository.CategoryRepository;
-import jakarta.transaction.Transactional;
+import com.meehigh.abcshop.utils.Utils;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +15,7 @@ import java.util.List;
 @Data
 @Service
 public class CategoryService {
+
     private final CategoryRepository categoryRepository;
 
     public CategoryService(CategoryRepository categoryRepository) {
@@ -25,22 +26,6 @@ public class CategoryService {
         return categoryRepository.findAll();
     }
 
-    //TODO
-/*    public Category getCategoryByName(String name) {
-        return categoryRepository.findAll().map(category -> {
-            if (category.getName().equals(name)) {
-                return category;
-            }
-            return null;
-        });
-    }*/
-
-    /*
-    public Category getCategoryById(long id) {
-        return categoryRepository.findById(id).
-                orElseThrow(() -> new CategoryNotFoundException("Category with id: " +id+ "not found"));
-    } */
-
     public Category getCategoryById(Long id) {
         return categoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Parent category not found"));
@@ -48,26 +33,42 @@ public class CategoryService {
 
     //TODO - 16.10.2025 - rezolvare erori, testare aplicatie
     //TODO - Explicare parte de autentificare + SpringSecurity
+/*
     @Transactional
     public Category addCategory(CategoryRequest category) {
-        return categoryRepository.save(CategoryRequest.convertToEntity(category));
-    }
+        return categoryRepository.save(CategoryRequest.categoryEntityToResponse(category));
+    }*/
 
+    @Transactional
+    public Category addCategory(CategoryRequest categoryRequest) {
+        return categoryRepository.save(Utils.categoryRequestToEntity(categoryRequest));
+    }
+    /*
     @Transactional
     public ResponseEntity<String> editCategory(Long id, CategoryRequest updatedCategory) {
         Category category = CategoryRequest.convertToEntity(updatedCategory);
-        return categoryRepository.findById(id).map(categ-> {
+        return categoryRepository.findById(id).map(categ -> {
             category.setId(categ.getId());
             categoryRepository.save(category);
-            return ResponseEntity.status(HttpStatus.OK).body("Category with id: " +id+ " has been updated successfully");
+            return ResponseEntity.status(HttpStatus.OK).body("Category with id: " + id + " has been updated successfully");
+        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Category with id: " + id + " not found"));
+    }*/
+
+    @Transactional
+    public ResponseEntity<String> editCategory(Long id, CategoryRequest updatedCategory) {
+        Category category = Utils.categoryRequestToEntity(updatedCategory);
+        return categoryRepository.findById(id).map(categ -> {
+            category.setId(categ.getId());
+            categoryRepository.save(category);
+            return ResponseEntity.status(HttpStatus.OK).body("Category with id: " + id + " has been updated successfully");
         }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Category with id: " + id + " not found"));
     }
 
     @Transactional
-    public ResponseEntity<String> deleteCategory(Long id){
-        return categoryRepository.findById(id).map(category ->  {
+    public ResponseEntity<String> deleteCategory(Long id) {
+        return categoryRepository.findById(id).map(category -> {
             categoryRepository.deleteById(category.getId());
-            return ResponseEntity.status(HttpStatus.OK).body("Category with id: " +id+ " has been deleted");
-        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Category with id: " +id+ " not found"));
+            return ResponseEntity.status(HttpStatus.OK).body("Category with id: " + id + " has been deleted");
+        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Category with id: " + id + " not found"));
     }
 }

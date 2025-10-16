@@ -1,5 +1,6 @@
 package com.meehigh.abcshop.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -45,6 +46,8 @@ public class User {
     @NotBlank(message = "Password cannot be blank")
     private String password;
 
+
+    @JsonIgnore // Ignorăm pentru JSON — previne recursivitate și concurrent modification
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_roles",
@@ -55,10 +58,12 @@ public class User {
 
     private String messageChannel;
 
-    @OneToMany(mappedBy = "user")
+    @JsonIgnore // Ignorăm pentru JSON — previne recursivitate și concurrent modification
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
-    @JsonIgnoreProperties("user")
+    @JsonIgnore // Ignorăm pentru JSON — previne recursivitate și concurrent modification
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    //@JsonIgnoreProperties("user")
     private List<Address> addresses = new ArrayList<>();
 }

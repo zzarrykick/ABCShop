@@ -7,13 +7,15 @@ import java.util.stream.Collectors;
 
 public class Utils {
 
+    // (Conversie DTO -> Entitate)
+    // Conversie AddressRequest → Address
     public static Address addressRequestToEntity(AddressRequest addressRequest) {
-        Address address = new Address();
+        Address address = new Address(); //Creez un obiect nou Address, copiez câmpurile din AddressRequest (DTO primit de la frontend).
         address.setName(addressRequest.getName());
         address.setCountry(addressRequest.getCountry());
         address.setCity(addressRequest.getCity());
         address.setStreet(addressRequest.getStreet());
-        address.setStreet(addressRequest.getZipCode());
+        address.setZipCode(addressRequest.getZipCode());
         return address;
     }
 
@@ -28,6 +30,7 @@ public class Utils {
     }
 
     // conversie din entitate în DTO
+
     public static AddressResponse addressEntityToResponse(Address address) {
         AddressResponse addressResponse = new AddressResponse();
 
@@ -54,11 +57,9 @@ public class Utils {
         CategoryResponse categoryResponse = new CategoryResponse();
 
         // extragem datele
-
         categoryResponse.setId(category.getId());
         categoryResponse.setName(category.getName());
         categoryResponse.setParent(category.getParent());
-
         return categoryResponse;
     }
 
@@ -115,11 +116,11 @@ public class Utils {
     }
 
     // conversie din entitate în DTO
+    //Conversie Product → ProductResponse
     public static ProductResponse productEntityToResponse(Product product) {
         ProductResponse productResponse = new ProductResponse();
 
         // extragem datele
-
         productResponse.setId(product.getId());
         productResponse.setName(product.getName());
         productResponse.setDescription(product.getDescription());
@@ -132,12 +133,12 @@ public class Utils {
     }
 
 
-    // conversie din entitate în DTO
+    // Conversie din entitate în DTO
+    // Conversie Role → RoleResponse
     public static RoleResponse roleEntityToResponse(Role role) {
         RoleResponse roleResponse = new RoleResponse();
 
         // extragem datele
-
         roleResponse.setId(role.getId());
         roleResponse.setRoleName(role.getRoleName());
 
@@ -166,9 +167,10 @@ public class Utils {
         return user;
     }
 
-
+    //Conversie User → UserResponse
     public static UserResponse userEntityToResponse(User user) {
         UserResponse userResponse = new UserResponse();
+        //extragem datele
         userResponse.setId(user.getId());
         userResponse.setUsername(user.getUsername());
         userResponse.setFirstName(user.getFirstName());
@@ -176,12 +178,24 @@ public class Utils {
         userResponse.setCity(user.getCity());
         userResponse.setEmail(user.getEmail());
         userResponse.setMessageChannel(user.getMessageChannel());
-        userResponse.setRoles(user.getRoles().stream()
-                .map(role -> roleEntityToResponse(role)).collect(Collectors.toSet()));
-        userResponse.setOrders(user.getOrders().stream()
-                .map(order -> orderEntityToResponse(order)).collect(Collectors.toList()));
-        userResponse.setAddresses(user.getAddresses().stream()
-                .map(address -> addressEntityToResponse(address)).collect(Collectors.toList()));
+        if (user.getRoles() != null) {
+            userResponse.setRoles(user.getRoles().stream()
+                    .map(Utils::roleEntityToResponse)
+                    .collect(Collectors.toSet()));
+        }
+
+        if (user.getOrders() != null) {
+            userResponse.setOrders(user.getOrders().stream()
+                    .map(Utils::orderEntityToResponse)
+                    .collect(Collectors.toList()));
+        }
+
+        if (user.getAddresses() != null) {
+            userResponse.setAddresses(user.getAddresses().stream()
+                    .map(Utils::addressEntityToResponse)
+                    .collect(Collectors.toList()));
+        }
+
         return userResponse;
     }
 
@@ -202,3 +216,5 @@ public class Utils {
         return user;
     }
 }
+
+

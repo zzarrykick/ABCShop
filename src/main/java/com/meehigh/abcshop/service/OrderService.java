@@ -4,7 +4,7 @@ import com.meehigh.abcshop.exception.OrderNotFoundException;
 import com.meehigh.abcshop.model.Order;
 import com.meehigh.abcshop.repository.OrderRepository;
 import com.meehigh.abcshop.repository.UserRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

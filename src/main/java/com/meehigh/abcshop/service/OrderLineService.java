@@ -3,7 +3,7 @@ package com.meehigh.abcshop.service;
 import com.meehigh.abcshop.exception.OrderNotFoundException;
 import com.meehigh.abcshop.model.OrderLine;
 import com.meehigh.abcshop.repository.OrderLineRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
