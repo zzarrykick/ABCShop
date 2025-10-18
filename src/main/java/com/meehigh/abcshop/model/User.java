@@ -48,7 +48,6 @@ public class User {
     private String password;
 
 
-    //@JsonIgnore // Ignorăm pentru JSON — previne recursivitate și concurrent modification
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_roles",
@@ -63,6 +62,5 @@ public class User {
     private List<Order> orders = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    //@JsonIgnoreProperties("user")
     private List<Address> addresses = new ArrayList<>();
 }

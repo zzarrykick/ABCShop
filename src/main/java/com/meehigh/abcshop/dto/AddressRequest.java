@@ -2,6 +2,7 @@ package com.meehigh.abcshop.dto;
 
 import com.meehigh.abcshop.model.Address;
 import com.meehigh.abcshop.model.Category;
+import com.meehigh.abcshop.model.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -35,9 +36,7 @@ public class AddressRequest {
 
     private String zipCode;
 
-
-
-
+    private UserResponse user;
 }
 
 

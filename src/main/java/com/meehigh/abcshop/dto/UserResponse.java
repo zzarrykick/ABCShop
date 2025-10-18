@@ -1,5 +1,6 @@
 package com.meehigh.abcshop.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.meehigh.abcshop.model.User;
 import lombok.Data;
 
@@ -18,8 +19,11 @@ public class UserResponse {
     private String city;
     private String email;
     private String messageChannel;
-    private Set<RoleResponse> roles = new HashSet<>();
+
+    private List<RoleResponse> roles = new ArrayList<>();
+
     private List<OrderResponse> orders = new ArrayList<>();
+
     private List<AddressResponse> addresses = new ArrayList<>();
 
 

@@ -1,5 +1,6 @@
 package com.meehigh.abcshop.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.meehigh.abcshop.model.Address;
 import com.meehigh.abcshop.model.User;
@@ -19,9 +20,6 @@ public class AddressResponse {
     private String city;
     private String street;
     private String zipCode;
-    private User user;
-
-
 }
 
 /*

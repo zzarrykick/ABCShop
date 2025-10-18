@@ -20,7 +20,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //@JsonIgnore // Ignorăm pentru JSON — previne recursivitate și concurrent modification
+    @JsonIgnore // Ignorăm pentru JSON — previne recursivitate și concurrent modification
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;

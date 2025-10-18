@@ -1,6 +1,9 @@
 package com.meehigh.abcshop.controller;
 
+import com.meehigh.abcshop.dto.AddressRequest;
 import com.meehigh.abcshop.dto.AddressResponse;
+import com.meehigh.abcshop.exception.AddressNotFoundException;
+import com.meehigh.abcshop.exception.UserNotFoundException;
 import com.meehigh.abcshop.model.Address;
 import com.meehigh.abcshop.model.User;
 import com.meehigh.abcshop.service.AddressService;
@@ -27,9 +30,9 @@ public class AddressController {
     }
 
     @PostMapping
-    public ResponseEntity<String> addNewAddress(@Valid @RequestBody Address address) {
-        addressService.addNewAddress(address);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Category " + address.getName() + " created successfully");
+    public ResponseEntity<?> addNewAddress(@Valid @RequestBody AddressRequest addressRequest) {
+        //addressService.addNewAddress(address);
+        return ResponseEntity.ok(addressService.addNewAddress(addressRequest));
     }
 
     @GetMapping("/getbyid/{id}")
@@ -40,26 +43,23 @@ public class AddressController {
 
     @GetMapping("/getbyname/{addressName}")
     public ResponseEntity<?> getAddressByName(@PathVariable String addressName) {
-        List<Address> address = addressService.getAddressByName(addressName);
+        List<AddressResponse> address = addressService.getAddressByName(addressName);
         return ResponseEntity.ok(address);
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/getbyuserid/{userId}")
     public ResponseEntity<?> getAddressByUserId(@PathVariable long userId) {
-        List<AddressResponse> address = addressService.getAddressByUserId(userId);
-        return ResponseEntity.ok(address);
+        return ResponseEntity.ok(addressService.getAddressByUserId(userId));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> editAddress(@PathVariable long id, @RequestBody Address updatedAddress) {
-        addressService.editAddress(id, updatedAddress);
-        return ResponseEntity.status(HttpStatus.OK).body("Address updated succesfully");
+    public ResponseEntity<?> editAddress(@PathVariable long id, @RequestBody Address updatedAddress) {
+        return ResponseEntity.ok(addressService.editAddress(id, updatedAddress));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteAddress(@PathVariable long id) {
-        addressService.deleteAddress(id);
-        return ResponseEntity.ok("Address deleted successfully!");
+    public ResponseEntity<?> deleteAddress(@PathVariable long id) {
+        return ResponseEntity.ok(addressService.deleteAddress(id));
     }
 /*
     @ResponseStatus(HttpStatus.NOT_FOUND)

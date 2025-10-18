@@ -35,11 +35,11 @@ public class UserService {
     }
 
 
-    public List<User> getAllUsers() {
-//        List<User> users = userRepository.findAll();
-//        return users.stream().map((user) -> Utils.userEntityToResponse(user))
-//                .collect(Collectors.toList());
-        return userRepository.findAll();
+    public List<UserResponse> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return users.stream().map((user) -> Utils.userEntityToResponse(user))
+                .collect(Collectors.toList());
+        //return userRepository.findAll();
     }
 
 

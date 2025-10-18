@@ -10,12 +10,15 @@ public class Utils {
     // (Conversie DTO -> Entitate)
     // Conversie AddressRequest → Address
     public static Address addressRequestToEntity(AddressRequest addressRequest) {
-        Address address = new Address(); //Creez un obiect nou Address, copiez câmpurile din AddressRequest (DTO primit de la frontend).
+        Address address = new Address();
         address.setName(addressRequest.getName());
         address.setCountry(addressRequest.getCountry());
         address.setCity(addressRequest.getCity());
         address.setStreet(addressRequest.getStreet());
         address.setZipCode(addressRequest.getZipCode());
+        if(addressRequest.getUser() != null) {
+            address.setUser(userResponseToEntity(addressRequest.getUser()));
+        }
         return address;
     }
 
@@ -41,8 +44,6 @@ public class Utils {
         addressResponse.setCity(address.getCity());
         addressResponse.setStreet(address.getStreet());
         addressResponse.setZipCode(address.getZipCode());
-        addressResponse.setUser(address.getUser());
-
         return addressResponse;
     }
 
@@ -182,7 +183,7 @@ public class Utils {
         if (user.getRoles() != null) {
             userResponse.setRoles(user.getRoles().stream()
                     .map(Utils::roleEntityToResponse)
-                    .collect(Collectors.toSet()));
+                    .collect(Collectors.toList()));
         }
 
         if (user.getOrders() != null) {
@@ -202,6 +203,7 @@ public class Utils {
 
     private static User userResponseToEntity(UserResponse userResponse) {
         User user = new User();
+        user.setId(userResponse.getId());
         user.setUsername(userResponse.getUsername());
         user.setFirstName(userResponse.getFirstName());
         user.setLastName(userResponse.getLastName());
