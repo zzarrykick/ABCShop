@@ -7,8 +7,7 @@ import java.util.stream.Collectors;
 
 public class Utils {
 
-    // (Conversie DTO -> Entitate)
-    // Conversie AddressRequest → Address
+    // Address
     public static Address addressRequestToEntity(AddressRequest addressRequest) {
         Address address = new Address();
         address.setName(addressRequest.getName());
@@ -32,8 +31,6 @@ public class Utils {
         return address;
     }
 
-    // conversie din entitate în DTO
-
     public static AddressResponse addressEntityToResponse(Address address) {
         AddressResponse addressResponse = new AddressResponse();
 
@@ -47,24 +44,33 @@ public class Utils {
         return addressResponse;
     }
 
+    // Category
     public static Category categoryRequestToEntity(CategoryRequest categoryRequest) {
         Category category = new Category();
         category.setName(categoryRequest.getName());
-        category.setParent(categoryRequest.getParent());
+        if (categoryRequest.getParent() != null) {
+            category.setParent(categoryRequest.getParent());
+        }
         return category;
     }
 
-    // conversie din entitate în DTO
+    public static Category categoryResponseToEntity(CategoryResponse categoryResponse) {
+        Category category = new Category();
+        category.setName(categoryResponse.getName());
+        if(categoryResponse.getParent() != null) {
+            category.setParent(categoryResponse.getParent());
+        }
+        return category;
+    }
     public static CategoryResponse categoryEntityToResponse(Category category) {
         CategoryResponse categoryResponse = new CategoryResponse();
-
-        // extragem datele
         categoryResponse.setId(category.getId());
         categoryResponse.setName(category.getName());
         categoryResponse.setParent(category.getParent());
         return categoryResponse;
     }
 
+    // OrderLine
     public static OrderLine orderLineRequestToEntity(OrderLineRequest orderLineRequest) {
         OrderLine orderLine = new OrderLine();
         orderLine.setQuantity(orderLineRequest.getQuantity());
@@ -82,6 +88,7 @@ public class Utils {
         return orderLineResponse;
     }
 
+    // Order
     public static Order oderRequestToEntity(OrderRequest orderRequest) {
         Order order = new Order();
         order.setUser(userResponseToEntity(orderRequest.getUser()));
@@ -96,9 +103,6 @@ public class Utils {
         return order;
     }
 
-
-
-    // conversie din entitate în DTO
     public static OrderResponse orderEntityToResponse(Order order) {
         OrderResponse orderResponse = new OrderResponse();
 
@@ -117,12 +121,37 @@ public class Utils {
         return orderResponse;
     }
 
-    // conversie din entitate în DTO
-    //Conversie Product → ProductResponse
+    // Product
+    public static Product productRequestToEntity(ProductRequest productRequest) {
+        Product product = new Product();
+        product.setName(productRequest.getName());
+        product.setDescription(productRequest.getDescription());
+        product.setCategory(categoryResponseToEntity(productRequest.getCategory()));
+        product.setThumbnailUrl(productRequest.getThumbnailUrl());
+        product.setPrice(productRequest.getPrice());
+        product.setStock(productRequest.getStock());
+//        if(productRequest.getOrderLine() != null) {
+//            product.setOrderLine(productRequest.getOrderLine())
+//        }
+        return product;
+    }
+
+    public static Product productResponseToEntity(ProductResponse productResponse) {
+        Product product = new Product();
+        product.setName(productResponse.getName());
+        product.setDescription(productResponse.getDescription());
+        product.setCategory(categoryResponseToEntity(productResponse.getCategory()));
+        product.setThumbnailUrl(productResponse.getThumbnailUrl());
+        product.setPrice(productResponse.getPrice());
+        // TODO
+        // vrem sa setam stock-ul prin Response ?
+        product.setStock(productResponse.getStock());
+        //product.setOrderLine(null);
+        return product;
+    }
+
     public static ProductResponse productEntityToResponse(Product product) {
         ProductResponse productResponse = new ProductResponse();
-
-        // extragem datele
         productResponse.setId(product.getId());
         productResponse.setName(product.getName());
         productResponse.setDescription(product.getDescription());
@@ -135,8 +164,7 @@ public class Utils {
     }
 
 
-    // Conversie din entitate în DTO
-    // Conversie Role → RoleResponse
+    // Role
     public static RoleResponse roleEntityToResponse(Role role) {
         RoleResponse roleResponse = new RoleResponse();
 

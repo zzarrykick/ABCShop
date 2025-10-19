@@ -1,6 +1,7 @@
 package com.meehigh.abcshop.controller;
 
 import com.meehigh.abcshop.dto.CategoryRequest;
+import com.meehigh.abcshop.dto.CategoryResponse;
 import com.meehigh.abcshop.model.Category;
 import com.meehigh.abcshop.service.CategoryService;
 import jakarta.validation.Valid;
@@ -21,29 +22,35 @@ public class CategoryController {
     }
 
     @GetMapping
-    public List<Category> getAllCategories() {
-        return categoryService.getAllCategories();
+    public ResponseEntity<List<CategoryResponse>> getAllCategories() {
+        List<CategoryResponse> categories = categoryService.getAllCategories();
+        if (categories.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(categories);
     }
-
-
-    @PostMapping
-    public ResponseEntity<String> addCategory(@Valid @RequestBody CategoryRequest category) {
-        categoryService.addCategory(category);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Category " + category.getName() + " created successfully");
-    }
-
-
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getCategoryById(@PathVariable long id) {
-        Category category = categoryService.getCategoryById(id);
+    public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable Long id) {
+        CategoryResponse category = categoryService.getCategoryById(id);
         return ResponseEntity.ok(category);
     }
 
+    @GetMapping("/getbyname/{categoryName}")
+    public ResponseEntity<List<CategoryResponse>> getCategoryByName(@PathVariable String categoryName) {
+        List<CategoryResponse> category = categoryService.getCategoryByName(categoryName);
+        return ResponseEntity.ok(category);
+    }
+
+    @PostMapping
+    public ResponseEntity<CategoryResponse> addCategory(@Valid @RequestBody CategoryRequest categoryRequest) {
+        return ResponseEntity.ok(categoryService.addCategory(categoryRequest));
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<String> editCategory(@PathVariable long id, @RequestBody CategoryRequest updatedCategory) {
-        categoryService.editCategory(id, updatedCategory);
-        return ResponseEntity.status(HttpStatus.OK).body("Category updated succesfully");
+    public ResponseEntity<String> editCategory(@PathVariable long id, @RequestBody CategoryRequest categoryRequest) {
+        categoryService.editCategory(id, categoryRequest);
+        return ResponseEntity.status(HttpStatus.OK).body("Category with id: " + id + " has been updated successfully");
     }
 
     @DeleteMapping("/{id}")

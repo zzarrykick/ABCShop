@@ -1,5 +1,8 @@
 package com.meehigh.abcshop.controller;
 
+import com.meehigh.abcshop.dto.CategoryResponse;
+import com.meehigh.abcshop.dto.ProductRequest;
+import com.meehigh.abcshop.dto.ProductResponse;
 import com.meehigh.abcshop.model.Product;
 import com.meehigh.abcshop.service.ProductService;
 import jakarta.validation.Valid;
@@ -15,29 +18,39 @@ public class ProductController {
 
     private final ProductService productService;
 
-    public ProductController(ProductService productService) {this.productService = productService;
+    public ProductController(ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
-    }
-
-    @PostMapping
-    public ResponseEntity<String> addProduct(@Valid @RequestBody Product product) {
-        productService.addProduct(product);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Product " + product.getName() + " created successfully");
+    public ResponseEntity<List<ProductResponse>> getAllProducts() {
+        List<ProductResponse> productResponse = productService.getAllProducts();
+        if(productResponse.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(productResponse);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getProductById(@PathVariable long id) {
-        Product product = productService.getProductById(id);
-        return ResponseEntity.ok(product);
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable long id) {
+        ProductResponse productResponse = productService.getProductById(id);
+        return ResponseEntity.ok(productResponse);
+    }
+
+    @GetMapping("/getbyname/{productName}")
+    public ResponseEntity<List<ProductResponse>> getCategoryByName(@PathVariable String productName) {
+        List<ProductResponse> category = productService.getProductByName(productName);
+        return ResponseEntity.ok(category);
+    }
+
+    @PostMapping
+    public ResponseEntity<ProductResponse> addProduct(@Valid @RequestBody ProductRequest productRequest) {
+        return ResponseEntity.ok(productService.addProduct(productRequest));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> editProduct(@PathVariable long id, @RequestBody Product updatedProduct) {
-        productService.editProduct(id, updatedProduct);
+    public ResponseEntity<String> editProduct(@PathVariable long id, @RequestBody ProductRequest productRequest) {
+        productService.editProduct(id, productRequest);
         return ResponseEntity.status(HttpStatus.OK).body("Product updated succesfully");
     }
 

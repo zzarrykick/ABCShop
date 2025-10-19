@@ -10,7 +10,6 @@ import java.util.List;
 
 @Data
 public class ProductResponse {
-
     private Long id;
     private String name;
     private String description;
@@ -18,7 +17,4 @@ public class ProductResponse {
     private String thumbnailUrl;
     private BigDecimal price;
     private Integer stock;
-
-
-
 }

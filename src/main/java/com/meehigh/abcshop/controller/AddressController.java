@@ -31,7 +31,6 @@ public class AddressController {
 
     @PostMapping
     public ResponseEntity<?> addNewAddress(@Valid @RequestBody AddressRequest addressRequest) {
-        //addressService.addNewAddress(address);
         return ResponseEntity.ok(addressService.addNewAddress(addressRequest));
     }
 

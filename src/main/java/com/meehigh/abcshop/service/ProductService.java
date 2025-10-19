@@ -1,17 +1,24 @@
 package com.meehigh.abcshop.service;
 
+import com.meehigh.abcshop.dto.AddressResponse;
+import com.meehigh.abcshop.dto.ProductRequest;
+import com.meehigh.abcshop.dto.ProductResponse;
+import com.meehigh.abcshop.exception.AddressNotFoundException;
 import com.meehigh.abcshop.exception.CategoryNotFoundException;
 import com.meehigh.abcshop.exception.ProductNotFoundException;
 import com.meehigh.abcshop.model.Category;
 import com.meehigh.abcshop.model.Product;
 import com.meehigh.abcshop.repository.CategoryRepository;
 import com.meehigh.abcshop.repository.ProductRepository;
+import com.meehigh.abcshop.utils.Utils;
+import jakarta.transaction.Transactional;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Service
@@ -24,41 +31,64 @@ public class ProductService {
         this.categoryRepository = categoryRepository;
     }
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductResponse> getAllProducts() {
+        return productRepository.findAll().stream()
+                .map(product -> Utils.productEntityToResponse(product))
+                .collect(Collectors.toList());
     }
 
-    public Product getProductById(Long id) {
+    public ProductResponse getProductById(Long id) {
         return productRepository.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException("Product with id: " + id + " not found"));
+                .map( product ->  Utils.productEntityToResponse(product))
+                .orElseThrow(() -> new AddressNotFoundException("Product with id: " + id + " not found"));
     }
 
-    public Product addProduct(Product product) {
-        if (product.getCategory() != null && product.getCategory().getId() != 0) {
-            Category category = categoryRepository.findById(product.getCategory().getId())
-                    .orElseThrow(() -> new CategoryNotFoundException("Category not found"));
+    public List<ProductResponse> getProductByName(String productName) {
+        List<ProductResponse> productResponses = productRepository.findByName(productName).stream()
+                .map(product -> Utils.productEntityToResponse(product)).collect(Collectors.toList());
+        if(!productResponses.isEmpty()){
+            throw (new AddressNotFoundException("Address with name: " + productName + " not found"));
         }
-        return productRepository.save(product);
+        return productResponses;
     }
 
-    public ResponseEntity<String> editProduct(Long id, Product updatedProduct) {
+    @Transactional
+    public ProductResponse addProduct(ProductRequest productRequest) {
+        Product product = Utils.productRequestToEntity(productRequest);
+        Category category = categoryRepository.findById(productRequest.getCategory().getId())
+                .orElseThrow(() -> new CategoryNotFoundException("Category with id " + productRequest.getCategory().getId() + " not found"));
 
-        return productRepository.findById(id).map(product -> {
-            if (updatedProduct.getCategory() != null && updatedProduct.getCategory().getId() != 0) {
-                categoryRepository.findById(updatedProduct.getCategory().getId())
-                        .orElseThrow(() -> new CategoryNotFoundException("Category not found"));
-            }
-            updatedProduct.setId(product.getId());
-            productRepository.save(updatedProduct);
-            return ResponseEntity.status(HttpStatus.OK).body("Product with id: " + id + " has been updated successfully");
-        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product with id: " + id + " not found"));
+        product.setCategory(category);
+        return Utils.productEntityToResponse((productRepository.save(product)));
+
+        //return Utils.productEntityToResponse(productRepository.save(Utils.productRequestToEntity((productRequest))));
     }
 
-    public ResponseEntity<String> deleteProduct(Long id) {
-        return productRepository.findById(id).map(product -> {
-            productRepository.deleteById(product.getId());
-            return ResponseEntity.status(HttpStatus.OK).body("Product has been deleted");
-        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product with id: " + id + " not found"));
+    @Transactional
+    public ProductResponse editProduct(Long id, ProductRequest productRequest) {
+        Product existingProduct = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Product with id " + id + " not found"));
+
+        existingProduct.setName(productRequest.getName());
+        existingProduct.setDescription(productRequest.getDescription());
+        existingProduct.setThumbnailUrl(productRequest.getThumbnailUrl());
+        existingProduct.setPrice(productRequest.getPrice());
+        existingProduct.setStock(productRequest.getStock());
+
+        if (productRequest.getCategory() != null && productRequest.getCategory().getId() != null) {
+            Category category = categoryRepository.findById(productRequest.getCategory().getId())
+                    .orElseThrow(() -> new CategoryNotFoundException("Category with id " + productRequest.getCategory().getId() + " not found"));
+            existingProduct.setCategory(category);
+        }
+
+        return Utils.productEntityToResponse(productRepository.save(existingProduct));
+    }
+
+    @Transactional
+    public void deleteProduct(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Product with id: " + id + " not found"));
+        productRepository.delete(product);
     }
 
 }
