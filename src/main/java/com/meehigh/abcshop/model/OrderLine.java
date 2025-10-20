@@ -18,7 +18,7 @@ public class OrderLine {
     private Product product;
 
     @NotNull
-    @NotBlank(message = "Quantity cannot be blank")
+    //@NotBlank(message = "Quantity cannot be blank")
     private Integer quantity;
 
     @ManyToOne(fetch = FetchType.EAGER)

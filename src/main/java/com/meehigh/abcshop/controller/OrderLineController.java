@@ -1,5 +1,7 @@
 package com.meehigh.abcshop.controller;
 
+import com.meehigh.abcshop.dto.OrderLineRequest;
+import com.meehigh.abcshop.dto.OrderLineResponse;
 import com.meehigh.abcshop.model.OrderLine;
 import com.meehigh.abcshop.service.OrderLineService;
 import jakarta.validation.Valid;
@@ -20,26 +22,23 @@ public class OrderLineController {
     }
 
     @GetMapping
-    public List<OrderLine> getAllOrderLine() {
-        return orderLineService.getAllOrderLines();
+    public ResponseEntity<List<OrderLineResponse>> getAllOrderLine() {
+        return ResponseEntity.ok(orderLineService.getAllOrderLines());
+    }
+
+    @GetMapping("/getbyid/{id}")
+    public ResponseEntity<?> getOrderLineById(@PathVariable long id) {
+        return ResponseEntity.ok(orderLineService.getOrderLineById(id));
     }
 
     @PostMapping
-    public ResponseEntity<String> addNewOrderLine(@Valid @RequestBody OrderLine orderLine) {
-        orderLineService.addNewOrderLine(orderLine);
-        return ResponseEntity.status(HttpStatus.CREATED).body("OrderLine " + orderLine.getId() + " created successfully");
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getOrderLineById(@PathVariable long id) {
-        OrderLine orderLine = orderLineService.getOrderLineById(id);
-        return ResponseEntity.ok(orderLine);
+    public ResponseEntity<OrderLineResponse> addNewOrderLine(@Valid @RequestBody OrderLineRequest orderLineRequest) {
+        return ResponseEntity.ok(orderLineService.addNewOrderLine(orderLineRequest));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> editOrderLine(@PathVariable long id, @RequestBody OrderLine updatedOrderLine) {
-        orderLineService.editOrderLine(id, updatedOrderLine);
-        return ResponseEntity.status(HttpStatus.OK).body("OrderLine updated succesfully");
+    public ResponseEntity<OrderLineResponse> editOrderLine(@PathVariable long id, @RequestBody OrderLineRequest updatedOrderLine) {
+        return ResponseEntity.ok(orderLineService.editOrderLine(id, updatedOrderLine));
     }
 
     @DeleteMapping("/{id}")

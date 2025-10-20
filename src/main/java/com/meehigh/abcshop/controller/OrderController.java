@@ -1,5 +1,7 @@
 package com.meehigh.abcshop.controller;
 
+import com.meehigh.abcshop.dto.OrderRequest;
+import com.meehigh.abcshop.dto.OrderResponse;
 import com.meehigh.abcshop.model.Order;
 import com.meehigh.abcshop.service.OrderService;
 import jakarta.validation.Valid;
@@ -20,26 +22,23 @@ public class OrderController {
     }
 
     @GetMapping
-    public List<Order> getAllOrderRequest() {
-        return orderService.getAllOrders();
+    public ResponseEntity<List<OrderResponse>> getAllOrders() {
+        return ResponseEntity.ok(orderService.getAllOrders());
+    }
+
+    @GetMapping("/getbyid/{id}")
+    public ResponseEntity<OrderResponse> getOrderRequestById(@PathVariable long id) {
+        return ResponseEntity.ok(orderService.getOrderById(id));
     }
 
     @PostMapping
-    public ResponseEntity<String> addNewOrderRequest(@Valid @RequestBody Order order) {
-        orderService.addNewOrder(order);
-        return ResponseEntity.status(HttpStatus.CREATED).body("OrderRequest " + order.getId() + " created successfully");
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getOrderRequestById(@PathVariable long id) {
-        Order order = orderService.getOrderById(id);
-        return ResponseEntity.ok(order);
+    public ResponseEntity<OrderResponse> addNewOrder(@Valid @RequestBody OrderRequest orderRequest) {
+        return ResponseEntity.ok(orderService.addNewOrder(orderRequest));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> editOrderRequest(@PathVariable long id, @RequestBody Order updatedOrder) {
-        orderService.editOrder(id, updatedOrder);
-        return ResponseEntity.status(HttpStatus.OK).body("OrderRequest updated succesfully");
+    public ResponseEntity<OrderResponse> editOrderRequest(@PathVariable long id, @RequestBody OrderRequest updatedOrder) {
+        return ResponseEntity.ok(orderService.editOrder(id, updatedOrder));
     }
 
     @DeleteMapping("/{id}")

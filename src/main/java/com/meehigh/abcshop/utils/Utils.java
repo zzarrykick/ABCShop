@@ -3,6 +3,7 @@ package com.meehigh.abcshop.utils;
 import com.meehigh.abcshop.dto.*;
 import com.meehigh.abcshop.model.*;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class Utils {
@@ -74,7 +75,7 @@ public class Utils {
     public static OrderLine orderLineRequestToEntity(OrderLineRequest orderLineRequest) {
         OrderLine orderLine = new OrderLine();
         orderLine.setQuantity(orderLineRequest.getQuantity());
-        orderLine.setProduct(orderLineRequest.getProductName());
+        orderLine.setProduct(productResponseToEntity(orderLineRequest.getProductName()));
         return orderLine;
     }
 
@@ -88,15 +89,23 @@ public class Utils {
         return orderLineResponse;
     }
 
+    public static OrderLine orderLineResponseToEntity(OrderLineResponse orderLineResponse) {
+        OrderLine orderLine = new OrderLine();
+        orderLine.setProduct(productResponseToEntity(orderLineResponse.getProduct()));
+        orderLine.setQuantity(orderLineResponse.getQuantity());
+        orderLine.setOrder(orderResponseToEntity(orderLineResponse.getOrder()));
+        return orderLine;
+    }
+
     // Order
-    public static Order oderRequestToEntity(OrderRequest orderRequest) {
+    public static Order orderRequestToEntity(OrderRequest orderRequest) {
         Order order = new Order();
         order.setUser(userResponseToEntity(orderRequest.getUser()));
         order.setDeliveryAddress(addressResponseToEntity(orderRequest.getDeliveryAddress()));
         return order;
     }
 
-    private static Order orderResponseToEntity(OrderResponse orderResponse) {
+    public static Order orderResponseToEntity(OrderResponse orderResponse) {
         Order order = new Order();
         order.setUser(userResponseToEntity(orderResponse.getUser()));
         order.setDeliveryAddress(addressResponseToEntity(orderResponse.getDeliveryAddress()));
@@ -175,11 +184,19 @@ public class Utils {
         return roleResponse;
     }
 
-    private static Role roleResponseToEntity(RoleResponse roleResponse) {
+    public static Role roleResponseToEntity(RoleResponse roleResponse) {
         Role role = new Role();
         role.setRoleName(roleResponse.getRoleName());
         return role;
     }
+
+    public static Role roleRequestToEntity(RoleRequest roleRequest) {
+        Role role = new Role();
+        role.setRoleName(roleRequest.getRoleName());
+        role.setUsers(roleRequest.getUsers().stream().map(userResponse -> userResponseToEntity(userResponse)).collect(Collectors.toList()));
+        return role;
+    }
+
 
     public static User userRequestToEntity(UserRequest userRequest) {
         User user = new User();
@@ -229,7 +246,7 @@ public class Utils {
         return userResponse;
     }
 
-    private static User userResponseToEntity(UserResponse userResponse) {
+    public static User userResponseToEntity(UserResponse userResponse) {
         User user = new User();
         user.setId(userResponse.getId());
         user.setUsername(userResponse.getUsername());
@@ -246,6 +263,7 @@ public class Utils {
                 .map(addressResponse -> addressResponseToEntity(addressResponse)).collect(Collectors.toList()));
         return user;
     }
+
 }
 
 

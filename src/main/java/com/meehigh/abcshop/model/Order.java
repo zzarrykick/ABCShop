@@ -32,7 +32,7 @@ public class Order {
     private Address userAddress;
 
     @NotNull
-    @NotBlank(message = "Order date cannot be blank")
+    //@NotBlank(message = "Order date cannot be blank")
     private LocalDateTime orderDate;
 
     @OneToMany(mappedBy = "order")

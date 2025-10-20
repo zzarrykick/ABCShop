@@ -74,20 +74,23 @@ public class AddressService {
     }
 
     @Transactional
-    public ResponseEntity<String> editAddress(Long id, Address updatedAddress) {
-        return addressRepository.findById(id).map(address -> {
-            updatedAddress.setId(address.getId());
-            addressRepository.save(updatedAddress);
-            return ResponseEntity.status(HttpStatus.OK).body("Address with id: " + id + " has been updated successfully");
-        }).orElseThrow(() -> new AddressNotFoundException("Address with id: " + id + " not found."));
+    public AddressResponse editAddress(Long id, Address updatedAddress) {
+        Address existingAddress = addressRepository.findById(id)
+                .orElseThrow(() -> new AddressNotFoundException( "Address with id: " + id + " not found"));
+        existingAddress.setName(updatedAddress.getName());
+        existingAddress.setCountry(updatedAddress.getCountry());
+        existingAddress.setCity(updatedAddress.getCity());
+        existingAddress.setStreet(updatedAddress.getStreet());
+        existingAddress.setZipCode(updatedAddress.getZipCode());
+        existingAddress.setUser(updatedAddress.getUser());
+       return Utils.addressEntityToResponse(addressRepository.save(existingAddress));
     }
 
     @Transactional
-    public ResponseEntity<String> deleteAddress(Long id) {
-        return addressRepository.findById(id).map(address -> {
-            addressRepository.deleteById(address.getId());
-            return ResponseEntity.status(HttpStatus.OK).body("Address has been deleted");
-        }).orElseThrow(() -> new AddressNotFoundException("Address with id: " + id + " not found."));
+    public void deleteAddress(Long id) {
+        Address address = addressRepository.findById(id)
+                .orElseThrow(() -> new AddressNotFoundException( "Address with id: " + id + " not found"));
+        addressRepository.delete(address);
     }
 }
 

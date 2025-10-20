@@ -1,5 +1,7 @@
 package com.meehigh.abcshop.controller;
 
+import com.meehigh.abcshop.dto.RoleRequest;
+import com.meehigh.abcshop.dto.RoleResponse;
 import com.meehigh.abcshop.model.Role;
 import com.meehigh.abcshop.service.RoleService;
 import jakarta.validation.Valid;
@@ -20,32 +22,28 @@ public class RoleController {
     }
 
     @GetMapping
-    public List<Role> getAllRoles() {
-        return roleService.getAllRoles();
+    public ResponseEntity<List<RoleResponse>> getAllRoles() {
+        return ResponseEntity.ok(roleService.getAllRoles());
+    }
+
+    @GetMapping("/getbyid/{id}")
+    public ResponseEntity<RoleResponse> getRoleById(@PathVariable long id) {
+        return ResponseEntity.ok(roleService.getRoleById(id));
+    }
+
+    @GetMapping("/getbyname/{roleName}")
+    public ResponseEntity<RoleResponse> getRoleByName(@PathVariable String roleName) {
+        return ResponseEntity.ok(roleService.getRoleByName(roleName));
     }
 
     @PostMapping
-    public ResponseEntity<String> addNewRole(@Valid @RequestBody Role role) {
-        roleService.addNewRole(role);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Role " + role.getId() + " created successfully");
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getRoleById(@PathVariable long id) {
-        Role role = roleService.getRoleById(id);
-        return ResponseEntity.ok(role);
-    }
-
-    @GetMapping("/{roleName}")
-    public ResponseEntity<?> getRoleByName(@PathVariable String roleName) {
-        Role role = roleService.getRoleByName(roleName);
-        return ResponseEntity.ok(role);
+    public ResponseEntity<RoleResponse> addNewRole(@Valid @RequestBody RoleRequest roleRequest) {
+        return ResponseEntity.ok(roleService.addNewRole(roleRequest));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> editRole(@PathVariable long id, @RequestBody Role updatedRole) {
-        roleService.editRole(id, updatedRole);
-        return ResponseEntity.status(HttpStatus.OK).body("Role updated succesfully");
+    public ResponseEntity<RoleResponse> editRole(@PathVariable long id, @RequestBody RoleRequest updatedRole) {
+        return ResponseEntity.ok(roleService.editRole(id, updatedRole));
     }
 
     @DeleteMapping("/{id}")
