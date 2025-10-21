@@ -17,6 +17,6 @@ public class UserRequest {
     private String email;
     private String password;
     private String messageChannel;
-    private Set<RoleResponse> roles = new HashSet<>();
+    private List<RoleResponse> roles = new ArrayList<>();
     private List<AddressResponse> addresses = new ArrayList<>();
 }

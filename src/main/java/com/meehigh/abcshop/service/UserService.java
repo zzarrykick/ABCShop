@@ -1,7 +1,9 @@
 package com.meehigh.abcshop.service;
 
 import com.meehigh.abcshop.dto.RegisterRequest;
+import com.meehigh.abcshop.dto.UserRequest;
 import com.meehigh.abcshop.dto.UserResponse;
+import com.meehigh.abcshop.exception.UserNotFoundException;
 import com.meehigh.abcshop.model.Role;
 import com.meehigh.abcshop.model.User;
 import com.meehigh.abcshop.repository.RoleRepository;
@@ -34,62 +36,85 @@ public class UserService {
         this.roleRepository = roleRepository;
     }
 
-
     public List<UserResponse> getAllUsers() {
         List<User> users = userRepository.findAll();
-        return users.stream().map((user) -> Utils.userEntityToResponse(user))
+        if(users.isEmpty()){
+            throw new UserNotFoundException("No users found!");
+        }
+        return users.stream().map(user -> Utils.userEntityToResponse(user))
                 .collect(Collectors.toList());
-        //return userRepository.findAll();
     }
 
-
-
-    public User getUserById(Long id) {
-        if (userRepository.existsById(id)) {
-            return userRepository.findById(id).get();
-        }
-        return null;
+    public UserResponse getUserById(Long id) {
+        return userRepository.findById(id).map( user -> Utils.userEntityToResponse(user))
+                .orElseThrow(() -> new UserNotFoundException("User not found!"));
     }
 
     @Transactional
-    public User addNewUser(RegisterRequest userRegisterDTO) {
+    public UserResponse addNewUser(UserRequest userRequest) {
         User user = new User();
-        user.setFirstName(userRegisterDTO.getFirstName());
-        user.setLastName(userRegisterDTO.getLastName());
-        user.setEmail(userRegisterDTO.getEmail());
-        user.setPassword(userRegisterDTO.getPassword());
-        user.setCity(userRegisterDTO.getCity());
-        user.setUsername(userRegisterDTO.getUsername());
-        user.setMessageChannel(userRegisterDTO.getMessageChannel());
+        user.setUsername(userRequest.getUsername());
+        user.setFirstName(userRequest.getFirstName());
+        user.setLastName(userRequest.getLastName());
+        user.setCity(userRequest.getCity());
+        user.setEmail(userRequest.getEmail());
+        user.setPassword(userRequest.getPassword());
+        user.setMessageChannel(userRequest.getMessageChannel());
+
         Role role = roleRepository.findByRoleName("ROLE_USER");
         if (role == null) {
             role = checkUserRoleExist("ROLE_USER");
         }
         user.setRoles(List.of(role));
-        return userRepository.save(user);
+
+        if(user.getAddresses() != null){
+            user.setAddresses(userRequest.getAddresses().stream()
+                    .map(addressResponse -> Utils.addressResponseToEntity(addressResponse)).collect(Collectors.toList()));
+        }
+
+        return Utils.userEntityToResponse(userRepository.save(user));
     }
 
     @Transactional
-    public ResponseEntity<String> editUser(Long id, User updatedUser) {
-        return userRepository.findById(id).map(user -> {
-            updatedUser.setId(user.getId());
-            userRepository.save(updatedUser);
-            return ResponseEntity.status(HttpStatus.OK).body("User with id: " + id + " has been updated successfully");
-        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with id: " + id + " not found"));
+    public UserResponse editUser(Long id, UserRequest updatedUser) {
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found!"));
+        existingUser.setUsername(updatedUser.getUsername());
+        existingUser.setFirstName(updatedUser.getFirstName());
+        existingUser.setLastName(updatedUser.getLastName());
+        existingUser.setCity(updatedUser.getCity());
+        existingUser.setEmail(updatedUser.getEmail());
+        existingUser.setPassword(updatedUser.getPassword());
+        existingUser.setMessageChannel(updatedUser.getMessageChannel());
+
+        Role role = roleRepository.findByRoleName("ROLE_USER");
+        if (role == null) {
+            role = checkUserRoleExist("ROLE_USER");
+        }
+        existingUser.setRoles(List.of(role));
+
+        if(updatedUser.getAddresses() != null){
+            existingUser.setAddresses(updatedUser.getAddresses().stream()
+                    .map(addressResponse -> Utils.addressResponseToEntity(addressResponse)).collect(Collectors.toList()));
+        }
+        return Utils.userEntityToResponse(userRepository.save(existingUser));
     }
 
     @Transactional
-    public ResponseEntity<String> deleteUser(Long id) {
-        return userRepository.findById(id).map(user -> {
-            userRepository.deleteById(user.getId());
-            return ResponseEntity.status(HttpStatus.OK).body("User with id: " + id + " has been deleted");
-        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with id: " + id + " not found"));
+    public void deleteUser(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found!"));
+        userRepository.delete(user);
     }
 
     @Transactional
     public Role checkUserRoleExist(String roleName) {
-        Role role1 = new Role();
-        role1.setRoleName(roleName);
-        return roleRepository.save(role1);
+        Role role = roleRepository.findByRoleName(roleName);
+        if (role != null) {
+            return role;
+        }
+        Role newRole = new Role();
+        newRole.setRoleName(roleName);
+        return roleRepository.save(newRole);
     }
 }

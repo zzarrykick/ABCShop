@@ -1,6 +1,7 @@
 package com.meehigh.abcshop.controller;
 
 import com.meehigh.abcshop.dto.RegisterRequest;
+import com.meehigh.abcshop.dto.UserRequest;
 import com.meehigh.abcshop.dto.UserResponse;
 import com.meehigh.abcshop.model.User;
 import com.meehigh.abcshop.service.UserService;
@@ -17,31 +18,27 @@ public class UserController {
 
     private final UserService userService;
 
-    public UserController(UserService userService) {this.userService = userService; }
+    public UserController(UserService userService) {
+        this.userService = userService; }
 
     @GetMapping
-    public ResponseEntity<?> getAllUsers() {
+    public ResponseEntity<List<UserResponse>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
 
-        var response = userService.getAllUsers();
-        return ResponseEntity.ok(response);
+    @GetMapping("/getbyind/{id}")
+    public ResponseEntity<UserResponse> getUserById(@PathVariable long id) {
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 
     @PostMapping
-    public ResponseEntity<String> addNewUsers(@Valid @RequestBody RegisterRequest userRequestDto) {
-        userService.addNewUser(userRequestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body("User " + userRequestDto.getUsername() + " created successfully");
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable long id) {
-        User user = userService.getUserById(id);
-        return ResponseEntity.ok(user);
+    public ResponseEntity<UserResponse> addNewUsers(@Valid @RequestBody UserRequest userRequest) {
+        return ResponseEntity.ok(userService.addNewUser(userRequest));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> editUser(@PathVariable long id, @RequestBody User updatedUser) {
-        userService.editUser(id, updatedUser);
-        return ResponseEntity.status(HttpStatus.OK).body("User updated succesfully");
+    public ResponseEntity<UserResponse> editUser(@PathVariable long id, @RequestBody UserRequest userRequest) {
+        return ResponseEntity.ok(userService.editUser(id, userRequest));
     }
 
     @DeleteMapping("/{id}")
