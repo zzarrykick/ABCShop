@@ -18,35 +18,22 @@ import java.util.Set;
 @Entity
 @Table(name = "app_user")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @NotBlank(message = "Username cannot be blank")
     private String username;
 
-    @NotNull
-    @NotBlank(message = "Firstname cannot be blank")
     private String firstName;
 
-    @NotNull
-    @NotBlank(message = "Lastname cannot be blank")
     private String lastName;
 
-    @NotNull
-    @NotBlank(message = "City cannot be blank")
     private String city;
 
-    @Email
-    @NotNull
-    @NotBlank(message = "Email cannot be blank")
     private String email;
 
-    @NotNull
-    @NotBlank(message = "Password cannot be blank")
     private String password;
-
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
@@ -64,3 +51,11 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Address> addresses = new ArrayList<>();
 }
+
+
+/*
+User:
+ are mai multe Order
+ are mai multe Address
+ are mai multe Role (și fiecare Role e folosit și de alți User)
+*/

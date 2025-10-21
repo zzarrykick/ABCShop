@@ -11,23 +11,21 @@ import java.util.List;
 @Data
 @Entity
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Product name cannot be blank")
     private String name;
 
-    @NotBlank(message = "Product description cannot be blank")
     private String description;
 
-    @ManyToOne(fetch = FetchType.EAGER) //Cu LAZY -> eroare legată de câmpul category din Product, care e încărcat LAZY și Jackson nu știe cum să-l serializeze.
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="category_id")
     private Category category;
 
     private String thumbnailUrl;
 
-    @Min(value = 1, message = "Price must be greater than 0 ")
     private BigDecimal price;
 
     private Integer stock;

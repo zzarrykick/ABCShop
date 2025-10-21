@@ -14,15 +14,15 @@ import java.util.Set;
 @Data
 @Entity
 public class Role {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @NotBlank
     private String roleName;
 
-    @JsonIgnore // Ignorăm pentru JSON — previne recursivitate și concurrent modification
+   // @JsonIgnore // Ignorăm pentru JSON — previne recursivitate și concurrent modification
     @ManyToMany(mappedBy = "roles")
     private List<User> users;
+
 }

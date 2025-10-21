@@ -17,8 +17,6 @@ public class OrderLine {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @NotNull
-    //@NotBlank(message = "Quantity cannot be blank")
     private Integer quantity;
 
     @ManyToOne(fetch = FetchType.EAGER)

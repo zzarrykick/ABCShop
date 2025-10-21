@@ -16,23 +16,21 @@ import java.util.List;
 @Data
 @Table(name = "order_list")
 public class Order {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonIgnore // Ignorăm pentru JSON — previne recursivitate și concurrent modification
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
-   @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     private Address deliveryAddress;
 
     @OneToOne(fetch = FetchType.EAGER)
     private Address userAddress;
 
-    @NotNull
-    //@NotBlank(message = "Order date cannot be blank")
     private LocalDateTime orderDate;
 
     @OneToMany(mappedBy = "order")

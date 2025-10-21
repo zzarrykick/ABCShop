@@ -7,8 +7,10 @@ import lombok.Data;
 
 @Data
 public class OrderLineResponse {
+
     private Integer quantity;
     private ProductResponse product;
+
     @JsonIgnore
     private OrderResponse order;
 
