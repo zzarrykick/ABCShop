@@ -30,29 +30,27 @@ public class AddressController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addNewAddress(@Valid @RequestBody AddressRequest addressRequest) {
+    public ResponseEntity<AddressResponse> addNewAddress(@Valid @RequestBody AddressRequest addressRequest) {
         return ResponseEntity.ok(addressService.addNewAddress(addressRequest));
     }
 
     @GetMapping("/getbyid/{id}")
-    public ResponseEntity<?> getAddressById(@PathVariable long id) {
-        AddressResponse address = addressService.getAddressById(id);
-        return ResponseEntity.ok(address);
+    public ResponseEntity<AddressResponse> getAddressById(@PathVariable long id) {
+        return ResponseEntity.ok(addressService.getAddressById(id));
     }
 
     @GetMapping("/getbyname/{addressName}")
-    public ResponseEntity<?> getAddressByName(@PathVariable String addressName) {
-        List<AddressResponse> address = addressService.getAddressByName(addressName);
-        return ResponseEntity.ok(address);
+    public ResponseEntity<List<AddressResponse>> getAddressByName(@PathVariable String addressName) {
+        return ResponseEntity.ok(addressService.getAddressByName(addressName));
     }
 
     @GetMapping("/getbyuserid/{userId}")
-    public ResponseEntity<?> getAddressByUserId(@PathVariable long userId) {
+    public ResponseEntity<List<AddressResponse>> getAddressByUserId(@PathVariable long userId) {
         return ResponseEntity.ok(addressService.getAddressByUserId(userId));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> editAddress(@PathVariable long id, @RequestBody Address updatedAddress) {
+    public ResponseEntity<AddressResponse> editAddress(@PathVariable long id, @RequestBody AddressRequest updatedAddress) {
         return ResponseEntity.ok(addressService.editAddress(id, updatedAddress));
     }
 

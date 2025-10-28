@@ -9,6 +9,7 @@ import com.meehigh.abcshop.model.User;
 import com.meehigh.abcshop.repository.RoleRepository;
 import com.meehigh.abcshop.repository.UserRepository;
 import com.meehigh.abcshop.utils.Utils;
+import jakarta.validation.Valid;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
@@ -50,8 +51,24 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("User not found!"));
     }
 
+    public UserResponse getUserByUsername(String username) {
+        User user = userRepository.findByUsername(username);
+        if(user == null){
+            throw new UserNotFoundException("User not found!");
+        }
+        return Utils.userEntityToResponse(user);
+    }
+
+    public UserResponse getUserByEmail(String email) {
+        User user = userRepository.findByEmail(email);
+        if(user == null){
+            throw new UserNotFoundException("User not found!");
+        }
+        return Utils.userEntityToResponse(user);
+    }
+
     @Transactional
-    public UserResponse addNewUser(UserRequest userRequest) {
+    public UserResponse addNewUser(@Valid UserRequest userRequest) {
         User user = new User();
         user.setUsername(userRequest.getUsername());
         user.setFirstName(userRequest.getFirstName());
@@ -76,7 +93,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponse editUser(Long id, UserRequest updatedUser) {
+    public UserResponse editUser(Long id, @Valid UserRequest updatedUser) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found!"));
         existingUser.setUsername(updatedUser.getUsername());
@@ -84,15 +101,13 @@ public class UserService {
         existingUser.setLastName(updatedUser.getLastName());
         existingUser.setCity(updatedUser.getCity());
         existingUser.setEmail(updatedUser.getEmail());
-        existingUser.setPassword(updatedUser.getPassword());
-        existingUser.setMessageChannel(updatedUser.getMessageChannel());
-
-        Role role = roleRepository.findByRoleName("ROLE_USER");
-        if (role == null) {
-            role = checkUserRoleExist("ROLE_USER");
+        if (updatedUser.getPassword() != null) {
+            existingUser.setPassword(updatedUser.getPassword());
         }
-        existingUser.setRoles(List.of(role));
-
+        existingUser.setMessageChannel(updatedUser.getMessageChannel());
+        if(updatedUser.getRoles() != null) {
+            existingUser.setRoles(updatedUser.getRoles().stream().map(role -> checkUserRoleExist(role.getRoleName())).collect(Collectors.toList()));
+        }
         if(updatedUser.getAddresses() != null){
             existingUser.setAddresses(updatedUser.getAddresses().stream()
                     .map(addressResponse -> Utils.addressResponseToEntity(addressResponse)).collect(Collectors.toList()));
@@ -110,11 +125,11 @@ public class UserService {
     @Transactional
     public Role checkUserRoleExist(String roleName) {
         Role role = roleRepository.findByRoleName(roleName);
-        if (role != null) {
-            return role;
+        if (role == null) {
+            Role newRole = new Role();
+            newRole.setRoleName(roleName);
+            return roleRepository.save(newRole);
         }
-        Role newRole = new Role();
-        newRole.setRoleName(roleName);
-        return roleRepository.save(newRole);
+        return role;
     }
 }

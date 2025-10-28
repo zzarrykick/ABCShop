@@ -26,9 +26,19 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @GetMapping("/getbyind/{id}")
+    @GetMapping("/getbyid/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable long id) {
         return ResponseEntity.ok(userService.getUserById(id));
+    }
+
+    @GetMapping("/getbyusername/{username}")
+    public ResponseEntity<UserResponse> getUserByUsername(@PathVariable String username) {
+        return ResponseEntity.ok(userService.getUserByUsername(username));
+    }
+
+    @GetMapping("/getbyemail/{email}")
+    public ResponseEntity<UserResponse> getUserByEmail(@PathVariable String email) {
+        return ResponseEntity.ok(userService.getUserByUsername(email));
     }
 
     @PostMapping
@@ -37,7 +47,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponse> editUser(@PathVariable long id, @RequestBody UserRequest userRequest) {
+    public ResponseEntity<UserResponse> editUser(@PathVariable long id, @Valid @RequestBody UserRequest userRequest) {
         return ResponseEntity.ok(userService.editUser(id, userRequest));
     }
 

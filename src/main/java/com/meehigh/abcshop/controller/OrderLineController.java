@@ -27,7 +27,7 @@ public class OrderLineController {
     }
 
     @GetMapping("/getbyid/{id}")
-    public ResponseEntity<?> getOrderLineById(@PathVariable long id) {
+    public ResponseEntity<OrderLineResponse> getOrderLineById(@PathVariable long id) {
         return ResponseEntity.ok(orderLineService.getOrderLineById(id));
     }
 

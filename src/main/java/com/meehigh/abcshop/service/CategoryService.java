@@ -28,9 +28,13 @@ public class CategoryService {
     }
 
     public List<CategoryResponse> getAllCategories() {
-        return categoryRepository.findAll().stream()
+        List<CategoryResponse> categories = categoryRepository.findAll().stream()
                 .map(category -> Utils.categoryEntityToResponse(category))
                 .collect(Collectors.toList());
+        if (categories.isEmpty()) {
+            throw new CategoryNotFoundException("No categories found");
+        }
+        return categories;
     }
 
     public CategoryResponse getCategoryById(Long id) {
@@ -43,9 +47,8 @@ public class CategoryService {
         List<CategoryResponse> categoryResponses = categoryRepository.findByName(categoryName).stream()
                 .map(category -> Utils.categoryEntityToResponse(category)).collect(Collectors.toList());
         if (categoryResponses.isEmpty()) {
-            throw new CategoryNotFoundException("Category with name: " + categoryName + " not found");
+            throw new CategoryNotFoundException("No category with name: " + categoryName + " found");
         }
-
         return categoryResponses;
     }
 

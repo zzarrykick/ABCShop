@@ -53,19 +53,12 @@ public class AddressService {
     }
 
     public List<AddressResponse> getAddressByUserId(Long userId) {
-        User userFound = new User();
-        try {
-            userFound = userRepository.findById(userId).get();
-        }catch(Exception e){
-            throw (new UserNotFoundException("User with id: " + userId + " not found"));
+        List<AddressResponse> addresses = addressRepository.findByUserId(userId).stream().map(address -> Utils.addressEntityToResponse(address))
+                .collect(Collectors.toList());
+        if (addresses.isEmpty()){
+            throw (new AddressNotFoundException("No addresses for user with id: " + userId + " found"));
         }
-        List<AddressResponse> addressResponse = addressRepository.findByUser(userFound).stream()
-                .map(address -> Utils.addressEntityToResponse(address)).collect(Collectors.toList());
-       if(!addressResponse.isEmpty()){
-            return addressResponse;
-        }
-       throw (new AddressNotFoundException("No addresses for user with id: " + userId + " were found"));
-
+        return addresses;
     }
 
     @Transactional
@@ -74,7 +67,7 @@ public class AddressService {
     }
 
     @Transactional
-    public AddressResponse editAddress(Long id, Address updatedAddress) {
+    public AddressResponse editAddress(Long id, AddressRequest updatedAddress) {
         Address existingAddress = addressRepository.findById(id)
                 .orElseThrow(() -> new AddressNotFoundException( "Address with id: " + id + " not found"));
         existingAddress.setName(updatedAddress.getName());
@@ -82,7 +75,7 @@ public class AddressService {
         existingAddress.setCity(updatedAddress.getCity());
         existingAddress.setStreet(updatedAddress.getStreet());
         existingAddress.setZipCode(updatedAddress.getZipCode());
-        existingAddress.setUser(updatedAddress.getUser());
+        existingAddress.setUser(Utils.userResponseToEntity(updatedAddress.getUser()));
        return Utils.addressEntityToResponse(addressRepository.save(existingAddress));
     }
 

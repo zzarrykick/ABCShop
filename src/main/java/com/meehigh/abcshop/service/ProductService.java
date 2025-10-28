@@ -32,22 +32,26 @@ public class ProductService {
     }
 
     public List<ProductResponse> getAllProducts() {
-        return productRepository.findAll().stream()
+        List<ProductResponse> products = productRepository.findAll().stream()
                 .map(product -> Utils.productEntityToResponse(product))
                 .collect(Collectors.toList());
+        if (products.isEmpty()) {
+            throw new ProductNotFoundException("No products found");
+        }
+        return products;
     }
 
     public ProductResponse getProductById(Long id) {
         return productRepository.findById(id)
                 .map( product ->  Utils.productEntityToResponse(product))
-                .orElseThrow(() -> new AddressNotFoundException("Product with id: " + id + " not found"));
+                .orElseThrow(() -> new ProductNotFoundException("No product with id: " + id + " found"));
     }
 
     public List<ProductResponse> getProductByName(String productName) {
         List<ProductResponse> productResponses = productRepository.findByName(productName).stream()
                 .map(product -> Utils.productEntityToResponse(product)).collect(Collectors.toList());
-        if(!productResponses.isEmpty()){
-            throw (new AddressNotFoundException("Address with name: " + productName + " not found"));
+        if(productResponses.isEmpty()){
+            throw (new ProductNotFoundException("No product with name: " + productName + " found"));
         }
         return productResponses;
     }
@@ -60,8 +64,6 @@ public class ProductService {
 
         product.setCategory(category);
         return Utils.productEntityToResponse((productRepository.save(product)));
-
-        //return Utils.productEntityToResponse(productRepository.save(Utils.productRequestToEntity((productRequest))));
     }
 
     @Transactional
@@ -80,7 +82,6 @@ public class ProductService {
                     .orElseThrow(() -> new CategoryNotFoundException("Category with id " + productRequest.getCategory().getId() + " not found"));
             existingProduct.setCategory(category);
         }
-
         return Utils.productEntityToResponse(productRepository.save(existingProduct));
     }
 

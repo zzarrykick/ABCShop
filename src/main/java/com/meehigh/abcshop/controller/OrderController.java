@@ -27,8 +27,13 @@ public class OrderController {
     }
 
     @GetMapping("/getbyid/{id}")
-    public ResponseEntity<OrderResponse> getOrderRequestById(@PathVariable long id) {
+    public ResponseEntity<OrderResponse> getOrderById(@PathVariable long id) {
         return ResponseEntity.ok(orderService.getOrderById(id));
+    }
+
+    @GetMapping("/getbyuserid/{id}")
+    public ResponseEntity<List<OrderResponse>> getOrderByUserId(@PathVariable long id) {
+        return ResponseEntity.ok(orderService.getOrderByUserId(id));
     }
 
     @PostMapping
@@ -42,9 +47,9 @@ public class OrderController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteOrderRequest(@PathVariable long id) {
+    public ResponseEntity<String> deleteOrder(@PathVariable long id) {
         orderService.deleteOrder(id);
-        return ResponseEntity.ok("OrderRequest deleted successfully!");
+        return ResponseEntity.ok("Order deleted successfully!");
     }
 /*
     @ResponseStatus(HttpStatus.NOT_FOUND)

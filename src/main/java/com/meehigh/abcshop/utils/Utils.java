@@ -116,8 +116,8 @@ public class Utils {
         OrderResponse orderResponse = new OrderResponse();
 
         // extragem datele
-       // orderResponse.setUser(userEntityToResponse(order.getUser()));
-        orderResponse.setUser(basicUserResponse(order.getUser()));
+        orderResponse.setUser(userEntityToResponse(order.getUser()));
+        //orderResponse.setUser(basicUserResponse(order.getUser()));
         orderResponse.setDeliveryAddress(addressEntityToResponse(order.getDeliveryAddress()));
         orderResponse.setUserAddress(addressEntityToResponse(order.getUserAddress()));
         orderResponse.setOrderDate(order.getOrderDate());
@@ -131,27 +131,27 @@ public class Utils {
         return orderResponse;
     }
 
-    private static UserResponse basicUserResponse(User user) {
-        if (user == null) return null;
-
-        UserResponse r = new UserResponse();
-        r.setId(user.getId());
-        r.setUsername(user.getUsername());
-        r.setFirstName(user.getFirstName());
-        r.setLastName(user.getLastName());
-        r.setCity(user.getCity());
-        r.setEmail(user.getEmail());
-        r.setMessageChannel(user.getMessageChannel());
-
-        if (user.getRoles() != null) {
-            r.setRoles(user.getRoles().stream()
-                    .map(Utils::roleEntityToResponse)
-                    .collect(Collectors.toList()));
-        }
-
-        // Important: nu setăm orders sau addresses!
-        return r;
-    }
+//    private static UserResponse basicUserResponse(User user) {
+//        if (user == null) return null;
+//
+//        UserResponse r = new UserResponse();
+//        r.setId(user.getId());
+//        r.setUsername(user.getUsername());
+//        r.setFirstName(user.getFirstName());
+//        r.setLastName(user.getLastName());
+//        r.setCity(user.getCity());
+//        r.setEmail(user.getEmail());
+//        r.setMessageChannel(user.getMessageChannel());
+//
+//        if (user.getRoles() != null) {
+//            r.setRoles(user.getRoles().stream()
+//                    .map(Utils::roleEntityToResponse)
+//                    .collect(Collectors.toList()));
+//        }
+//
+//        // Important: nu setăm orders sau addresses!
+//        return r;
+//    }
 
     //Problema: recursie infinită între orderEntityToResponse() ↔ userEntityToResponse().
     //Rezultatul: un ciclu infinit Order -> User -> Order -> User... → JVM intră într-un loop până
@@ -232,7 +232,9 @@ public class Utils {
         user.setUsername(userRequest.getUsername());
         user.setFirstName(userRequest.getFirstName());
         user.setLastName(userRequest.getLastName());
-        user.setPassword(userRequest.getPassword());
+        if(userRequest.getPassword() != null){
+            user.setPassword(userRequest.getPassword());
+        }
         user.setCity(userRequest.getCity());
         user.setEmail(userRequest.getEmail());
         user.setMessageChannel(userRequest.getMessageChannel());
@@ -260,17 +262,17 @@ public class Utils {
                     .collect(Collectors.toList()));
         }
 
-        if (user.getOrders() != null) {
-            userResponse.setOrders(user.getOrders().stream()
-                    .map(Utils::orderEntityToResponse)
-                    .collect(Collectors.toList()));
-        }
-
-        if (user.getAddresses() != null) {
-            userResponse.setAddresses(user.getAddresses().stream()
-                    .map(Utils::addressEntityToResponse)
-                    .collect(Collectors.toList()));
-        }
+//        if (user.getOrders() != null) {
+//            userResponse.setOrders(user.getOrders().stream()
+//                    .map(Utils::orderEntityToResponse)
+//                    .collect(Collectors.toList()));
+//        }
+//
+//        if (user.getAddresses() != null) {
+//            userResponse.setAddresses(user.getAddresses().stream()
+//                    .map(Utils::addressEntityToResponse)
+//                    .collect(Collectors.toList()));
+//        }
 
         return userResponse;
     }
@@ -286,10 +288,10 @@ public class Utils {
         user.setMessageChannel(userResponse.getMessageChannel());
         user.setRoles(userResponse.getRoles().stream()
                 .map(role -> roleResponseToEntity(role)).collect(Collectors.toList()));
-        user.setOrders(userResponse.getOrders().stream()
-                .map(order -> orderResponseToEntity(order)).collect(Collectors.toList()));
-        user.setAddresses(userResponse.getAddresses().stream()
-                .map(addressResponse -> addressResponseToEntity(addressResponse)).collect(Collectors.toList()));
+//        user.setOrders(userResponse.getOrders().stream()
+//                .map(order -> orderResponseToEntity(order)).collect(Collectors.toList()));
+//        user.setAddresses(userResponse.getAddresses().stream()
+//                .map(addressResponse -> addressResponseToEntity(addressResponse)).collect(Collectors.toList()));
         return user;
     }
 

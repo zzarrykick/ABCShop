@@ -21,9 +21,9 @@ public class UserResponse {
 
     private List<RoleResponse> roles = new ArrayList<>();
 
-    private List<OrderResponse> orders = new ArrayList<>();
+    //private List<OrderResponse> orders = new ArrayList<>();
 
-    private List<AddressResponse> addresses = new ArrayList<>();
+    //private List<AddressResponse> addresses = new ArrayList<>();
 
 }
 

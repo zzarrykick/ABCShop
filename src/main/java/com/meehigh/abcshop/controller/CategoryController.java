@@ -23,23 +23,17 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<List<CategoryResponse>> getAllCategories() {
-        List<CategoryResponse> categories = categoryService.getAllCategories();
-        if (categories.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-        return ResponseEntity.ok(categories);
+        return ResponseEntity.ok(categoryService.getAllCategories());
     }
 
     @GetMapping("/getbyid/{id}")
     public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable Long id) {
-        CategoryResponse category = categoryService.getCategoryById(id);
-        return ResponseEntity.ok(category);
+        return ResponseEntity.ok(categoryService.getCategoryById(id));
     }
 
     @GetMapping("/getbyname/{categoryName}")
     public ResponseEntity<List<CategoryResponse>> getCategoryByName(@PathVariable String categoryName) {
-        List<CategoryResponse> category = categoryService.getCategoryByName(categoryName);
-        return ResponseEntity.ok(category);
+        return ResponseEntity.ok(categoryService.getCategoryByName(categoryName));
     }
 
     @PostMapping
@@ -48,9 +42,8 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> editCategory(@PathVariable long id, @RequestBody CategoryRequest categoryRequest) {
-        categoryService.editCategory(id, categoryRequest);
-        return ResponseEntity.status(HttpStatus.OK).body("Category with id: " + id + " has been updated successfully");
+    public ResponseEntity<CategoryResponse> editCategory(@PathVariable long id, @RequestBody CategoryRequest categoryRequest) {
+        return ResponseEntity.ok(categoryService.editCategory(id, categoryRequest));
     }
 
     @DeleteMapping("/{id}")

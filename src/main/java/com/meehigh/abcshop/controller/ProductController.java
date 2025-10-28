@@ -24,23 +24,17 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getAllProducts() {
-        List<ProductResponse> productResponse = productService.getAllProducts();
-        if(productResponse.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-        return ResponseEntity.ok(productResponse);
+        return ResponseEntity.ok(productService.getAllProducts());
     }
 
     @GetMapping("/getbyid/{id}")
     public ResponseEntity<ProductResponse> getProductById(@PathVariable long id) {
-        ProductResponse productResponse = productService.getProductById(id);
-        return ResponseEntity.ok(productResponse);
+        return ResponseEntity.ok(productService.getProductById(id));
     }
 
     @GetMapping("/getbyname/{productName}")
-    public ResponseEntity<List<ProductResponse>> getCategoryByName(@PathVariable String productName) {
-        List<ProductResponse> category = productService.getProductByName(productName);
-        return ResponseEntity.ok(category);
+    public ResponseEntity<List<ProductResponse>> getProductByName(@PathVariable String productName) {
+        return ResponseEntity.ok(productService.getProductByName(productName));
     }
 
     @PostMapping
@@ -49,9 +43,8 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> editProduct(@PathVariable long id, @RequestBody ProductRequest productRequest) {
-        productService.editProduct(id, productRequest);
-        return ResponseEntity.status(HttpStatus.OK).body("Product updated succesfully");
+    public ResponseEntity<ProductResponse> editProduct(@PathVariable long id, @RequestBody ProductRequest productRequest) {
+        return ResponseEntity.ok(productService.editProduct(id, productRequest));
     }
 
     @DeleteMapping("/{id}")

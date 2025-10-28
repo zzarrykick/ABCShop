@@ -51,6 +51,14 @@ public class OrderService {
                 .orElseThrow(()-> new OrderNotFoundException("Order with id: " +id + " not found"));
     }
 
+    public List<OrderResponse> getOrderByUserId(Long id) {
+        List<OrderResponse> orders = orderRepository.findByUserId(id).stream().map(order -> Utils.orderEntityToResponse(order)).collect(Collectors.toList());
+        if (orders.isEmpty()) {
+            throw new OrderNotFoundException("No orders found");
+        }
+        return orders;
+    }
+
     @Transactional
     public OrderResponse addNewOrder(OrderRequest orderRequest) {
        return Utils.orderEntityToResponse(orderRepository.save(Utils.orderRequestToEntity(orderRequest)));
