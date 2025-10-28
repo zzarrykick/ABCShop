@@ -1,8 +1,6 @@
 package com.meehigh.abcshop.dto;
 
-import com.meehigh.abcshop.model.Order;
-import com.meehigh.abcshop.model.Product;
-import jakarta.persistence.*;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -12,6 +10,7 @@ public class OrderLineRequest {
     @NotNull(message = "Quantity cannot be null")
     private Integer quantity;
 
+    @NotNull(message = "Product cannot be null")
     private ProductResponse productName;
 
     private OrderResponse order;

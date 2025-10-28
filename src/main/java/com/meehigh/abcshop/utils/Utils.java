@@ -116,7 +116,8 @@ public class Utils {
         OrderResponse orderResponse = new OrderResponse();
 
         // extragem datele
-        orderResponse.setUser(userEntityToResponse(order.getUser()));
+       // orderResponse.setUser(userEntityToResponse(order.getUser()));
+        orderResponse.setUser(basicUserResponse(order.getUser()));
         orderResponse.setDeliveryAddress(addressEntityToResponse(order.getDeliveryAddress()));
         orderResponse.setUserAddress(addressEntityToResponse(order.getUserAddress()));
         orderResponse.setOrderDate(order.getOrderDate());
@@ -129,6 +130,34 @@ public class Utils {
 
         return orderResponse;
     }
+
+    private static UserResponse basicUserResponse(User user) {
+        if (user == null) return null;
+
+        UserResponse r = new UserResponse();
+        r.setId(user.getId());
+        r.setUsername(user.getUsername());
+        r.setFirstName(user.getFirstName());
+        r.setLastName(user.getLastName());
+        r.setCity(user.getCity());
+        r.setEmail(user.getEmail());
+        r.setMessageChannel(user.getMessageChannel());
+
+        if (user.getRoles() != null) {
+            r.setRoles(user.getRoles().stream()
+                    .map(Utils::roleEntityToResponse)
+                    .collect(Collectors.toList()));
+        }
+
+        // Important: nu setăm orders sau addresses!
+        return r;
+    }
+
+    //Problema: recursie infinită între orderEntityToResponse() ↔ userEntityToResponse().
+    //Rezultatul: un ciclu infinit Order -> User -> Order -> User... → JVM intră într-un loop până
+    // epuizează memoria stivei → StackOverflowError.
+    //Soluția: în orderEntityToResponse() folosim un „user redus” (basicUserResponse)
+    // fără referințe circulare.
 
     // Product
     public static Product productRequestToEntity(ProductRequest productRequest) {
