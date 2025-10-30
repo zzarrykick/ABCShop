@@ -1,7 +1,5 @@
 package com.meehigh.abcshop.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.meehigh.abcshop.model.User;
 import lombok.Data;
 
 import java.util.ArrayList;
