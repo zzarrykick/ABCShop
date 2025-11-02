@@ -1,6 +1,5 @@
 package com.meehigh.abcshop.dto;
 
-
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
