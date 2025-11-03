@@ -10,6 +10,7 @@ import com.meehigh.abcshop.repository.RoleRepository;
 import com.meehigh.abcshop.repository.UserRepository;
 import com.meehigh.abcshop.utils.Utils;
 import jakarta.validation.Valid;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
@@ -29,11 +30,12 @@ public class UserService {
     //Sau se trateaza direct din serviciul de Order?
 
     private final UserRepository userRepository;
-    //private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
     }
 
@@ -68,24 +70,38 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponse addNewUser(@Valid UserRequest userRequest) {
+    public UserResponse addNewUser(@Valid RegisterRequest registerRequest) {
         User user = new User();
-        user.setUsername(userRequest.getUsername());
-        user.setFirstName(userRequest.getFirstName());
-        user.setLastName(userRequest.getLastName());
-        user.setCity(userRequest.getCity());
-        user.setEmail(userRequest.getEmail());
-        user.setPassword(userRequest.getPassword());
-        user.setMessageChannel(userRequest.getMessageChannel());
-
-        Role role = roleRepository.findByRoleName("ROLE_USER");
-        if (role == null) {
-            role = checkUserRoleExist("ROLE_USER");
-        }
-        user.setRoles(List.of(role));
+        user.setUsername(registerRequest.getUsername());
+        user.setFirstName(registerRequest.getFirstName());
+        user.setLastName(registerRequest.getLastName());
+        user.setCity(registerRequest.getCity());
+        user.setEmail(registerRequest.getEmail());
+        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        user.setMessageChannel(registerRequest.getMessageChannel());
+        user.setRoles(List.of(checkUserRoleExist("ROLE_USER")));
 
         if(user.getAddresses() != null){
-            user.setAddresses(userRequest.getAddresses().stream()
+            user.setAddresses(registerRequest.getAddresses().stream()
+                    .map(addressResponse -> Utils.addressResponseToEntity(addressResponse)).collect(Collectors.toList()));
+        }
+
+        return Utils.userEntityToResponse(userRepository.save(user));
+    }
+
+    @Transactional
+    public UserResponse addNewAdmin(@Valid RegisterRequest registerRequest) {
+        User user = new User();
+        user.setUsername(registerRequest.getUsername());
+        user.setFirstName(registerRequest.getFirstName());
+        user.setLastName(registerRequest.getLastName());
+        user.setCity(registerRequest.getCity());
+        user.setEmail(registerRequest.getEmail());
+        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        user.setMessageChannel(registerRequest.getMessageChannel());
+        user.setRoles(List.of(checkUserRoleExist("ROLE_ADMIN")));
+        if(user.getAddresses() != null){
+            user.setAddresses(registerRequest.getAddresses().stream()
                     .map(addressResponse -> Utils.addressResponseToEntity(addressResponse)).collect(Collectors.toList()));
         }
 

@@ -67,5 +67,11 @@ public class GlobalExceptionHandler {
         return new ErrorResponse(errorMessage);
 
     }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(UsernameAlreadyTakenException.class)
+    public ErrorResponse handleUsernameAlreadyTaken(UsernameAlreadyTakenException ex){
+        return new ErrorResponse(ex.getMessage());
+    }
 }
 

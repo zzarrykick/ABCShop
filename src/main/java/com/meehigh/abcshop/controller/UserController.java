@@ -42,8 +42,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserResponse> addNewUsers(@Valid @RequestBody UserRequest userRequest) {
-        return ResponseEntity.ok(userService.addNewUser(userRequest));
+    public ResponseEntity<UserResponse> addNewUsers(@Valid @RequestBody RegisterRequest registerRequest) {
+        return ResponseEntity.ok(userService.addNewUser(registerRequest));
     }
 
     @PutMapping("/{id}")
