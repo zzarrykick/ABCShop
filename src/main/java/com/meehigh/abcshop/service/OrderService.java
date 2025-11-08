@@ -13,12 +13,15 @@ import com.meehigh.abcshop.repository.AddressRepository;
 import com.meehigh.abcshop.repository.OrderRepository;
 import com.meehigh.abcshop.repository.UserRepository;
 import com.meehigh.abcshop.utils.Utils;
+import jakarta.validation.Valid;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,9 +63,14 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderResponse addNewOrder(OrderRequest orderRequest) {
+    public OrderResponse addNewOrder(@Valid @RequestBody OrderRequest orderRequest) {
        return Utils.orderEntityToResponse(orderRepository.save(Utils.orderRequestToEntity(orderRequest)));
     }
+
+
+
+
+
 
     @Transactional
     public OrderResponse editOrder(Long id,  OrderRequest updatedOrder) {

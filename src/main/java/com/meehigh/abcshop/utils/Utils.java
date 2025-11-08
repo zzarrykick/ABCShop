@@ -3,6 +3,7 @@ package com.meehigh.abcshop.utils;
 import com.meehigh.abcshop.dto.*;
 import com.meehigh.abcshop.model.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,6 +56,16 @@ public class Utils {
         return category;
     }
 
+    /* EROARE:
+    Cannot invoke "CategoryResponse.getName()" because "categoryResponse" is null
+Adică frontend-ul trimite la backend un produs doar cu id-ul în orderLines, iar tu,
+ când mapezi DTO-ul în entitate, încerci să citești categoryResponse.getName() deși category este null.
+Trebuie să faci mapper-ele din Utils mai „tolerante la null” și, pentru comenzi,
+ să setezi produsul doar cu id-ul.
+    */
+
+    /* Metoda implementata pana la data de 08.11.2025
+    //Varianta initiala
     public static Category categoryResponseToEntity(CategoryResponse categoryResponse) {
         Category category = new Category();
         category.setName(categoryResponse.getName());
@@ -63,6 +74,20 @@ public class Utils {
         }
         return category;
     }
+     */
+
+    //Metoda sugerata la data de 08.11.2025 (Varianta modificata)
+    public static Category categoryResponseToEntity(CategoryResponse categoryResponse) {
+        if (categoryResponse == null) {
+            return null; // poate fi null în OrderRequest (noi trimitem doar product.id)
+        }
+        Category category = new Category();
+        category.setId(categoryResponse.getId());
+        category.setName(categoryResponse.getName());
+        return category;
+    }
+
+
     public static CategoryResponse categoryEntityToResponse(Category category) {
         CategoryResponse categoryResponse = new CategoryResponse();
         categoryResponse.setId(category.getId());
@@ -97,11 +122,50 @@ public class Utils {
         return orderLine;
     }
 
-    // Order
+    /*// Order
     public static Order orderRequestToEntity(OrderRequest orderRequest) {
         Order order = new Order();
         order.setUser(userResponseToEntity(orderRequest.getUser()));
         order.setDeliveryAddress(addressResponseToEntity(orderRequest.getDeliveryAddress()));
+        return order;
+    }
+
+     */
+
+    public static Order orderRequestToEntity(OrderRequest orderRequest) {
+        Order order = new Order();
+
+        // user + adrese
+        order.setUser(userResponseToEntity(orderRequest.getUser()));
+        order.setDeliveryAddress(addressResponseToEntity(orderRequest.getDeliveryAddress()));
+        order.setUserAddress(addressResponseToEntity(orderRequest.getUserAddress()));
+
+        // orderDate – dacă nu vine din frontend, punem acum
+        order.setOrderDate(
+                orderRequest.getOrderDate() != null
+                        ? orderRequest.getOrderDate()
+                        : LocalDateTime.now()
+        );
+
+        // status – dacă vrem implicit NEW
+        order.setStatus(
+                orderRequest.getStatus() != null
+                        ? orderRequest.getStatus()
+                        : Status.NEW
+        );
+
+        // linii comandă – aici  remediez eroarea
+        //Frontend-ul trimite comanda corect (inclusiv orderDate), dar în baza de date ajunge NULL.
+        //Adică Hibernate încearcă să insereze un order_list cu order_date = NULL, iar coloana este NOT NULL.
+        //Rezultatul: Order ajunge la save() cu orderDate = null.
+        if (orderRequest.getOrderLines() != null) {
+            order.setOrderLines(
+                    orderRequest.getOrderLines().stream()
+                            .map(Utils::orderLineResponseToEntity)   // <-- asta e important!
+                            .collect(Collectors.toList())            // sau toSet(), după tipul câmpului
+            );
+        }
+
         return order;
     }
 

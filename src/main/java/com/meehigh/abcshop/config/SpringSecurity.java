@@ -49,6 +49,7 @@ public class SpringSecurity {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/auth-api/**").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
+                        .requestMatchers("/api/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE,"/api/products/delete/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
