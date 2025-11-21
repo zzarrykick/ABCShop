@@ -26,7 +26,8 @@ public class AddressRequest {
 
     private String zipCode;
 
-    private UserResponse user; // doar ID, nu întreaga entitate User
+    //private UserResponse user; // doar ID, nu întreaga entitate User
+    private Long userId;
 }
 
 

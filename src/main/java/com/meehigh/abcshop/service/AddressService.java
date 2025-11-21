@@ -63,11 +63,19 @@ public class AddressService {
 
     @Transactional
     public AddressResponse addNewAddress(AddressRequest addressRequest) {
-        return Utils.addressEntityToResponse(addressRepository.save(Utils.addressRequestToEntity(addressRequest)));
+        User user = userRepository.findById(addressRequest.getUserId())
+                .orElseThrow(()  -> new UserNotFoundException("User with id: " + addressRequest.getUserId() + " not found"));
+        if(user != null) {
+            return Utils.addressEntityToResponse(addressRepository.save(Utils.addressRequestToEntity(addressRequest, user)));
+        }
+        else throw new UserNotFoundException("User with id: " + addressRequest.getUserId() + " not found");
     }
 
     @Transactional
     public AddressResponse editAddress(Long id, AddressRequest updatedAddress) {
+        User user = userRepository.findById(updatedAddress.getUserId())
+                .orElseThrow(()  -> new UserNotFoundException("User with id: " + updatedAddress.getUserId() + " not found"));
+
         Address existingAddress = addressRepository.findById(id)
                 .orElseThrow(() -> new AddressNotFoundException( "Address with id: " + id + " not found"));
         existingAddress.setName(updatedAddress.getName());
@@ -75,7 +83,7 @@ public class AddressService {
         existingAddress.setCity(updatedAddress.getCity());
         existingAddress.setStreet(updatedAddress.getStreet());
         existingAddress.setZipCode(updatedAddress.getZipCode());
-        existingAddress.setUser(Utils.userResponseToEntity(updatedAddress.getUser()));
+        existingAddress.setUser(user);
        return Utils.addressEntityToResponse(addressRepository.save(existingAddress));
     }
 

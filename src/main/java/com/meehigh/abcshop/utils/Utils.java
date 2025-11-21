@@ -10,15 +10,15 @@ import java.util.stream.Collectors;
 public class Utils {
 
     // Address
-    public static Address addressRequestToEntity(AddressRequest addressRequest) {
+    public static Address addressRequestToEntity(AddressRequest addressRequest, User user) {
         Address address = new Address();
         address.setName(addressRequest.getName());
         address.setCountry(addressRequest.getCountry());
         address.setCity(addressRequest.getCity());
         address.setStreet(addressRequest.getStreet());
         address.setZipCode(addressRequest.getZipCode());
-        if(addressRequest.getUser() != null) {
-            address.setUser(userResponseToEntity(addressRequest.getUser()));
+        if(addressRequest.getUserId() != null) {
+            address.setUser(user);
         }
         return address;
     }
@@ -137,9 +137,12 @@ Trebuie să faci mapper-ele din Utils mai „tolerante la null” și, pentru co
 
         // user + adrese
         order.setUser(userResponseToEntity(orderRequest.getUser()));
-        order.setDeliveryAddress(addressResponseToEntity(orderRequest.getDeliveryAddress()));
-        order.setUserAddress(addressResponseToEntity(orderRequest.getUserAddress()));
-
+        if(orderRequest.getDeliveryAddress() != null) {
+            order.setDeliveryAddress(addressResponseToEntity(orderRequest.getDeliveryAddress()));
+        }
+        if(orderRequest.getUserAddress() != null) {
+            order.setUserAddress(addressResponseToEntity(orderRequest.getUserAddress()));
+        }
         // orderDate – dacă nu vine din frontend, punem acum
         order.setOrderDate(
                 orderRequest.getOrderDate() != null
@@ -170,9 +173,16 @@ Trebuie să faci mapper-ele din Utils mai „tolerante la null” și, pentru co
     }
 
     public static Order orderResponseToEntity(OrderResponse orderResponse) {
+        if (orderResponse == null) {
+            return null;
+        }
         Order order = new Order();
-        order.setUser(userResponseToEntity(orderResponse.getUser()));
-        order.setDeliveryAddress(addressResponseToEntity(orderResponse.getDeliveryAddress()));
+        if (orderResponse.getUser() != null) {
+            order.setUser(userResponseToEntity(orderResponse.getUser()));
+        }
+        if (orderResponse.getDeliveryAddress() != null) {
+            order.setDeliveryAddress(addressResponseToEntity(orderResponse.getDeliveryAddress()));
+        }
         return order;
     }
 

@@ -118,7 +118,7 @@ public class UserService {
         existingUser.setCity(updatedUser.getCity());
         existingUser.setEmail(updatedUser.getEmail());
         if (updatedUser.getPassword() != null) {
-            existingUser.setPassword(updatedUser.getPassword());
+            existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
         }
         existingUser.setMessageChannel(updatedUser.getMessageChannel());
         if(updatedUser.getRoles() != null) {

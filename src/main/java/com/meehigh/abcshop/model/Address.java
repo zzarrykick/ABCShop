@@ -18,5 +18,6 @@ public class Address {
     private String zipCode;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="user_id")
     private User user;
 }
