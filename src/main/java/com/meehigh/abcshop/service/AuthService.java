@@ -62,6 +62,7 @@ public class AuthService {
                 .map(item -> item.getAuthority()).toList();
 
         LoginResponse response = new LoginResponse();
+        response.setId(userDetails.getUserNameInfo().getId());
         response.setFirstName(userDetails.getUserNameInfo().getFirstName());
         response.setLastName(userDetails.getUserNameInfo().getLastName());
         response.setUsername(userDetails.getUsername());
