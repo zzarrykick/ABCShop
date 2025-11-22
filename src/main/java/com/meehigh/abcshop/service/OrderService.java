@@ -4,7 +4,9 @@ import com.meehigh.abcshop.dto.AddressResponse;
 import com.meehigh.abcshop.dto.OrderLineResponse;
 import com.meehigh.abcshop.dto.OrderRequest;
 import com.meehigh.abcshop.dto.OrderResponse;
+import com.meehigh.abcshop.exception.AddressNotFoundException;
 import com.meehigh.abcshop.exception.OrderNotFoundException;
+import com.meehigh.abcshop.exception.UserNotFoundException;
 import com.meehigh.abcshop.model.Address;
 import com.meehigh.abcshop.model.Order;
 import com.meehigh.abcshop.model.OrderLine;
@@ -64,22 +66,28 @@ public class OrderService {
 
     @Transactional
     public OrderResponse addNewOrder(@Valid @RequestBody OrderRequest orderRequest) {
-       return Utils.orderEntityToResponse(orderRepository.save(Utils.orderRequestToEntity(orderRequest)));
+        User user = userRepository.findById(orderRequest.getUserId())
+                .orElseThrow(()->new UserNotFoundException("User with id: " +orderRequest.getUserId() + " not found"));
+        Address deliveryAddress = addressRepository.findById(orderRequest.getDeliveryAddressId())
+                .orElseThrow(() -> new AddressNotFoundException("Address with id: " +orderRequest.getDeliveryAddressId() + " not found"));
+        Address userAddress = new Address();
+        if (orderRequest.getUserAddressId() != null) {
+            userAddress = addressRepository.findById(orderRequest.getUserAddressId())
+                    .orElseThrow(() -> new AddressNotFoundException("Address with id: " +orderRequest.getUserAddressId() + " not found"));
+        } else{
+            userAddress = null;
+        }
+       return Utils.orderEntityToResponse(orderRepository.save(Utils.orderRequestToEntity(orderRequest, user, deliveryAddress, userAddress)));
     }
-
-
-
-
-
 
     @Transactional
     public OrderResponse editOrder(Long id,  OrderRequest updatedOrder) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(()-> new OrderNotFoundException("Order with id: " +id + " not found"));
 
-        order.setUser(Utils.userResponseToEntity(updatedOrder.getUser()));
-        order.setDeliveryAddress(Utils.addressResponseToEntity(updatedOrder.getDeliveryAddress()));
-        order.setUserAddress(Utils.addressResponseToEntity(updatedOrder.getUserAddress()));
+//        order.setUser(Utils.userResponseToEntity(updatedOrder.getUser()));
+//        order.setDeliveryAddress(Utils.addressResponseToEntity(updatedOrder.getDeliveryAddress()));
+//        order.setUserAddress(Utils.addressResponseToEntity(updatedOrder.getUserAddress()));
         order.setOrderDate(updatedOrder.getOrderDate());
         order.setOrderLines(updatedOrder.getOrderLines().stream()
                 .map(orderLineResponse -> Utils.orderLineResponseToEntity(orderLineResponse)).collect(Collectors.toList()));

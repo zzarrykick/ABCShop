@@ -97,10 +97,10 @@ Trebuie să faci mapper-ele din Utils mai „tolerante la null” și, pentru co
     }
 
     // OrderLine
-    public static OrderLine orderLineRequestToEntity(OrderLineRequest orderLineRequest) {
+    public static OrderLine orderLineRequestToEntity(OrderLineRequest orderLineRequest, Product product) {
         OrderLine orderLine = new OrderLine();
         orderLine.setQuantity(orderLineRequest.getQuantity());
-        orderLine.setProduct(productResponseToEntity(orderLineRequest.getProductName()));
+        orderLine.setProduct(product);
         return orderLine;
     }
 
@@ -132,40 +132,26 @@ Trebuie să faci mapper-ele din Utils mai „tolerante la null” și, pentru co
 
      */
 
-    public static Order orderRequestToEntity(OrderRequest orderRequest) {
+    public static Order orderRequestToEntity(OrderRequest orderRequest, User user, Address deliveryAddress, Address userAddress) {
         Order order = new Order();
-
-        // user + adrese
-        order.setUser(userResponseToEntity(orderRequest.getUser()));
-        if(orderRequest.getDeliveryAddress() != null) {
-            order.setDeliveryAddress(addressResponseToEntity(orderRequest.getDeliveryAddress()));
+        order.setUser(user);
+        order.setDeliveryAddress(deliveryAddress);
+        order.setUserAddress(userAddress);
+        if(orderRequest.getOrderDate() != null){
+            order.setOrderDate(orderRequest.getOrderDate());
+        } else {
+            order.setOrderDate(LocalDateTime.now());
         }
-        if(orderRequest.getUserAddress() != null) {
-            order.setUserAddress(addressResponseToEntity(orderRequest.getUserAddress()));
+        if(orderRequest.getStatus() != null){
+            order.setStatus(orderRequest.getStatus());
+        } else{
+            order.setStatus(Status.NEW);
         }
-        // orderDate – dacă nu vine din frontend, punem acum
-        order.setOrderDate(
-                orderRequest.getOrderDate() != null
-                        ? orderRequest.getOrderDate()
-                        : LocalDateTime.now()
-        );
-
-        // status – dacă vrem implicit NEW
-        order.setStatus(
-                orderRequest.getStatus() != null
-                        ? orderRequest.getStatus()
-                        : Status.NEW
-        );
-
-        // linii comandă – aici  remediez eroarea
-        //Frontend-ul trimite comanda corect (inclusiv orderDate), dar în baza de date ajunge NULL.
-        //Adică Hibernate încearcă să insereze un order_list cu order_date = NULL, iar coloana este NOT NULL.
-        //Rezultatul: Order ajunge la save() cu orderDate = null.
         if (orderRequest.getOrderLines() != null) {
             order.setOrderLines(
                     orderRequest.getOrderLines().stream()
-                            .map(Utils::orderLineResponseToEntity)   // <-- asta e important!
-                            .collect(Collectors.toList())            // sau toSet(), după tipul câmpului
+                            .map(Utils::orderLineResponseToEntity)
+                            .collect(Collectors.toList())
             );
         }
 

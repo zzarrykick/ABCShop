@@ -4,8 +4,11 @@ import com.meehigh.abcshop.dto.OrderLineRequest;
 import com.meehigh.abcshop.dto.OrderLineResponse;
 import com.meehigh.abcshop.exception.OrderLineNotFoundException;
 import com.meehigh.abcshop.exception.OrderNotFoundException;
+import com.meehigh.abcshop.exception.ProductNotFoundException;
 import com.meehigh.abcshop.model.OrderLine;
+import com.meehigh.abcshop.model.Product;
 import com.meehigh.abcshop.repository.OrderLineRepository;
+import com.meehigh.abcshop.repository.ProductRepository;
 import com.meehigh.abcshop.utils.Utils;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.Data;
@@ -21,8 +24,10 @@ import java.util.stream.Collectors;
 public class OrderLineService {
 
     private OrderLineRepository orderLineRepository;
-    public OrderLineService(OrderLineRepository orderLineRepository) {
+    private ProductRepository productRepository;
+    public OrderLineService(OrderLineRepository orderLineRepository,  ProductRepository productRepository) {
         this.orderLineRepository = orderLineRepository;
+        this.productRepository = productRepository;
     }
 
     public List<OrderLineResponse> getAllOrderLines() {
@@ -41,14 +46,16 @@ public class OrderLineService {
 
     @Transactional
     public OrderLineResponse addNewOrderLine(OrderLineRequest orderLineRequest) {
-        return Utils.orderLineEntityToResponse(orderLineRepository.save(Utils.orderLineRequestToEntity(orderLineRequest)));
+        Product product = productRepository.findById(orderLineRequest.getProductId())
+                .orElseThrow(() -> new ProductNotFoundException("Product with id: " +orderLineRequest.getProductId() + " not found"));
+        return Utils.orderLineEntityToResponse(orderLineRepository.save(Utils.orderLineRequestToEntity(orderLineRequest, product)));
     }
 
     @Transactional
     public OrderLineResponse editOrderLine(Long id, OrderLineRequest updatedOrderLine) {
         OrderLine orderLine = orderLineRepository.findById(id)
                 .orElseThrow(() -> new OrderLineNotFoundException("OrderLine with id: " +id + " not found"));
-        orderLine.setProduct(Utils.productResponseToEntity(updatedOrderLine.getProductName()));
+//        orderLine.setProduct(Utils.productResponseToEntity(updatedOrderLine.getProductName()));
         orderLine.setQuantity(updatedOrderLine.getQuantity());
         orderLine.setOrder(Utils.orderResponseToEntity(updatedOrderLine.getOrder()));
 

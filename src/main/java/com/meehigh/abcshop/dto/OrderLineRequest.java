@@ -10,7 +10,7 @@ public class OrderLineRequest {
     private Integer quantity;
 
     @NotNull(message = "Product cannot be null")
-    private ProductResponse productName;
+    private Long productId;
 
     private OrderResponse order;
 

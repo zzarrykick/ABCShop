@@ -11,9 +11,9 @@ import java.util.List;
 @Data
 public class OrderRequest {
 
-    private UserResponse user;
-    private AddressResponse deliveryAddress;
-    private AddressResponse userAddress;
+    private Long userId;
+    private Long deliveryAddressId;
+    private Long userAddressId;
 
     @NotNull
     private LocalDateTime orderDate;
